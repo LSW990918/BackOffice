@@ -45,8 +45,8 @@ class UserServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun updateUser(userId: Long, request: UserUpdateRequest): UserResponse {
-        val user = userRepository.findByIdOrNull(userId)
+    override fun updateUser(userId: Int, request: UserUpdateRequest): UserResponse {
+        val user = userRepository.findByIdOrNull(userId.toLong())
             ?:throw IllegalArgumentException()
 
         // 비밀번호 검증
@@ -55,8 +55,8 @@ class UserServiceImpl(
         return userRepository.save(user).toResponse()
     }
 
-    override fun deleteUser(userId : Long, request: UserDeleteRequest) {
-        val user = userRepository.findByIdOrNull(userId)
+    override fun deleteUser(userId : Int, request: UserDeleteRequest) {
+        val user = userRepository.findByIdOrNull(userId.toLong())
             ?:throw IllegalArgumentException()
 
         // 비밀번호 검증

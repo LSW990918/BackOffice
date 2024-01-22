@@ -8,6 +8,6 @@ interface UserService {
 
     fun logOut()
 
-    fun updateUser(userId : Long, request : UserUpdateRequest) : UserResponse
-    fun deleteUser(userId : Long, request: UserDeleteRequest)
+    fun updateUser(userId : Int, request : UserUpdateRequest) : UserResponse
+    fun deleteUser(userId : Int, request: UserDeleteRequest)
 }

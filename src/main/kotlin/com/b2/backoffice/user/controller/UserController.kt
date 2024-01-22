@@ -36,7 +36,7 @@ class UserController(
     @PutMapping("/{userId}/profile")
     fun updateUser(
         @RequestBody request: UserUpdateRequest,
-        @PathVariable userId: Long,
+        @PathVariable userId: Int,
     ): ResponseEntity<UserResponse>
     {
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, request))
@@ -44,7 +44,7 @@ class UserController(
     @DeleteMapping("/{userId}")
     fun deleteUser(
         @RequestBody request: UserDeleteRequest,
-        @PathVariable userId: Long,
+        @PathVariable userId: Int,
     ): ResponseEntity<UserResponse>
     {
         userService.deleteUser(userId, request)
