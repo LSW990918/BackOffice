@@ -1,21 +1,15 @@
 package com.b2.backoffice.domain.posts.Entity
 
 import com.b2.backoffice.domain.posts.dto.PostResponse
-import com.b2.backoffice.domain.posts.dto.createAt
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 //@Table(name = "Posts")
 
-class Post(
+class PostEntity(
     @Column(name = "created_at")
-    val createdAt : LocalDateTime = LocalDateTime.now()
-
-    @Column(name = "email")
-    val emial : String,
-
-    @Column(name = "password")
-    var password : String,
+    val createdAt : LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "nickname")
     var nickname : String,
@@ -35,14 +29,13 @@ class Post(
     val id : Int? = null
 }
 
-fun Post.toResponse() : PostResponse{
+fun PostEntity.toResponse() : PostResponse{
     return PostResponse(
     id = id!!,
-    createAt = createdAt
-    email = email,
+    createAt = createdAt,
     nickname = nickname,
     title = title,
-    contents = contents
-    likes = likes
+    contents = contents,
+    likes = likes,
     )
 }
