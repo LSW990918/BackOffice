@@ -1,21 +1,10 @@
 package com.b2.backoffice.domain.board.dto
 
-import jakarta.persistence.*
 import java.time.LocalDateTime
 
-@Entity
-@Table(name = "boards")
-class BoardResponse(
-    @Column(name = "created_at")
-    val createdAt : LocalDateTime = LocalDateTime.now(),
-
-    @Column(name = "title")
+data class BoardResponse(
+    val id : Long, // 자동 생성
+    var createAt : LocalDateTime,
     var title : String,
-
-    @Column(name = "contents")
     var contents : String,
-){
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id : Long? = null
-}
+)
