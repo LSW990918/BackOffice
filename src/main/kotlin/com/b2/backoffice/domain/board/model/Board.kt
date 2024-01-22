@@ -17,5 +17,5 @@ class Board(
 ){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id : Long? = null
+    val id : Int? = null
 }
