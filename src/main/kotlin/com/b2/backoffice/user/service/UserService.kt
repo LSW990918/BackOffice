@@ -4,7 +4,7 @@ import com.b2.backoffice.user.dto.*
 
 interface UserService {
     fun signUp(request : UserSignUpRequest) : UserResponse
-    fun logIn(request : UserLogInRequest) : UserResponse
+    fun logIn(request : UserLogInRequest) : UserLogInResponse
 
     fun logOut()
 

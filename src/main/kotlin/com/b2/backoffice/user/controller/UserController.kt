@@ -28,7 +28,7 @@ class UserController(
     @PostMapping("/logIn")
     fun logIn(
         @RequestBody request : UserLogInRequest
-    ) : ResponseEntity<UserResponse>
+    ) : ResponseEntity<UserLogInResponse>
     {
         return ResponseEntity.status(HttpStatus.OK).body(userService.logIn(request))
     }

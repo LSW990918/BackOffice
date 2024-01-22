@@ -5,6 +5,7 @@ import com.b2.backoffice.user.model.User
 import com.b2.backoffice.user.model.UserRole
 import com.b2.backoffice.user.model.toResponse
 import com.b2.backoffice.user.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,7 +30,14 @@ class UserServiceImpl(
         ).toResponse()
     }
 
-    override fun logIn(request: UserLogInRequest) : UserResponse {
+    override fun logIn(request: UserLogInRequest) : UserLogInResponse {
+        val user = userRepository.findByEmail(request.email)
+        //    ?:throw ModelNotFound()
+
+        // 비밀번호 검증
+
+        // 토큰 생성
+
         TODO("Not yet implemented")
     }
 
@@ -38,10 +46,21 @@ class UserServiceImpl(
     }
 
     override fun updateUser(userId: Long, request: UserUpdateRequest): UserResponse {
-        TODO("Not yet implemented")
+        val user = userRepository.findByIdOrNull(userId)
+            ?:throw IllegalArgumentException()
+
+        // 비밀번호 검증
+
+        user.nickName = request.nickName
+        return userRepository.save(user).toResponse()
     }
 
     override fun deleteUser(userId : Long, request: UserDeleteRequest) {
-        TODO("Not yet implemented")
+        val user = userRepository.findByIdOrNull(userId)
+            ?:throw IllegalArgumentException()
+
+        // 비밀번호 검증
+
+        userRepository.delete(user)
     }
 }
