@@ -7,9 +7,9 @@ import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
 
 interface BoardService {
     fun getBoardList() : List<BoardResponse>
-    fun getBoard(boardId: Long) : BoardResponse
+    fun getBoard(boardId: Int) : BoardResponse
     fun createBoard(request: BoardCreateRequest) : BoardResponse
-    fun updateBoard(boardId: Long, request: BoardUpdateRequest) : BoardResponse
-    fun deleteBoard(boardId : Long, request: BoardDeleteRequest)
+    fun updateBoard(boardId: Int, request: BoardUpdateRequest) : BoardResponse
+    fun deleteBoard(boardId : Int, request: BoardDeleteRequest)
 
 }

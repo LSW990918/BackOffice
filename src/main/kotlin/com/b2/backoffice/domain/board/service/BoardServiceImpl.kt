@@ -21,8 +21,8 @@ class BoardServiceImpl (
         TODO()
     }
 
-    override fun getBoard(boardId: Long): BoardResponse {
-        return boardRepository.findByIdOrNull(boardId)
+    override fun getBoard(boardId: Int): BoardResponse {
+        return boardRepository.findByIdOrNull(boardId.toLong())
             ?.toResponse()
             ?:throw IllegalArgumentException()
     }
@@ -36,24 +36,24 @@ class BoardServiceImpl (
             ).toResponse()
     }
 
-    override fun updateBoard(boardId: Long, request: BoardUpdateRequest): BoardResponse {
+    override fun updateBoard(boardId: Int, request: BoardUpdateRequest): BoardResponse {
 
         // 비밀번호 검증
 
-        var Board = boardRepository.findByIdOrNull(boardId)
+        var board = boardRepository.findByIdOrNull(boardId.toLong())
             ?:throw IllegalArgumentException()
 
-        Board.title = request.title
-        Board.contents = request.contents
+        board.title = request.title
+        board.contents = request.contents
 
-        return boardRepository.save(Board).toResponse()
+        return boardRepository.save(board).toResponse()
     }
 
-    override fun deleteBoard(boardId: Long, request: BoardDeleteRequest) {
+    override fun deleteBoard(boardId: Int, request: BoardDeleteRequest) {
 
         // 비밀번호 검증
 
-        val Board = boardRepository.findByIdOrNull(boardId)
+        val Board = boardRepository.findByIdOrNull(boardId.toLong())
             ?:throw IllegalArgumentException()
 
         boardRepository.delete(Board)
