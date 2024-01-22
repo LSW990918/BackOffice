@@ -1,9 +1,6 @@
 package com.b2.backoffice.user.controller
 
-import com.b2.backoffice.user.dto.UserLogInRequest
-import com.b2.backoffice.user.dto.UserResponse
-import com.b2.backoffice.user.dto.UserSignUpRequest
-import com.b2.backoffice.user.dto.UserUpdateRequest
+import com.b2.backoffice.user.dto.*
 import com.b2.backoffice.user.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,7 +22,7 @@ class UserController(
         @RequestBody request : UserSignUpRequest
     ) : ResponseEntity<UserResponse>
     {
-      TODO()
+      return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
     }
 
     @PostMapping("/logIn")
@@ -33,7 +30,7 @@ class UserController(
         @RequestBody request : UserLogInRequest
     ) : ResponseEntity<UserResponse>
     {
-        TODO()
+        return ResponseEntity.status(HttpStatus.OK).body(userService.logIn(request))
     }
 
     @PutMapping("/{userId}/profile")
@@ -42,14 +39,15 @@ class UserController(
         @PathVariable userId: Long,
     ): ResponseEntity<UserResponse>
     {
-        TODO()
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, request))
     }
     @DeleteMapping("/{userId}")
     fun deleteUser(
-        @RequestBody request: UserUpdateRequest,
+        @RequestBody request: UserDeleteRequest,
         @PathVariable userId: Long,
     ): ResponseEntity<UserResponse>
     {
-        TODO()
+        userService.deleteUser(userId, request)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

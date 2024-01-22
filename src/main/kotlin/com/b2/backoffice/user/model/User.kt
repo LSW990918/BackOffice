@@ -26,7 +26,7 @@ class User(
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id : Long? = null
+    val id : Int? = null
 }
 
 fun User.toResponse() : UserResponse{
