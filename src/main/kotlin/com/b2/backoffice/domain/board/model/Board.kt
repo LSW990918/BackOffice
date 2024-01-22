@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.board.model
 
+import com.b2.backoffice.domain.board.dto.BoardResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -18,4 +19,14 @@ class Board(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Int? = null
+}
+
+fun Board.toResponse() : BoardResponse
+{
+    return BoardResponse(
+        id = id!!,
+        createAt = createdAt,
+        title = title,
+        contents = contents
+    )
 }

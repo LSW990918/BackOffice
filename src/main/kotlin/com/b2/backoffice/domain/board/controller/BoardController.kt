@@ -24,20 +24,20 @@ class BoardController(
 ) {
     @GetMapping()
     fun getBoardList() : ResponseEntity<List<BoardResponse>>{
-        TODO()
+
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardList())
     }
     @GetMapping("/{boardId}")
     fun getBoard( @PathVariable boardId : Long )
                   : ResponseEntity<BoardResponse>{
-        TODO()
+
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId))
     }
     @PostMapping()
     fun createBoard(
         @RequestBody request : BoardCreateRequest
     ) : ResponseEntity<BoardResponse>{
-        TODO()
+
         return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(request))
     }
     @PutMapping("/{boardId}")
@@ -45,7 +45,7 @@ class BoardController(
         @PathVariable boardId: Long,
         @RequestBody request : BoardUpdateRequest
     ) : ResponseEntity<BoardResponse>{
-        TODO()
+
         return ResponseEntity.status(HttpStatus.OK).body(boardService.updateBoard(boardId, request))
     }
 
@@ -54,6 +54,7 @@ class BoardController(
         @PathVariable boardId : Long,
         @RequestBody request : BoardDeleteRequest
     ) : ResponseEntity<Unit> {
+
         boardService.deleteBoard(boardId, request)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }

@@ -4,27 +4,58 @@ import com.b2.backoffice.domain.board.dto.BoardCreateRequest
 import com.b2.backoffice.domain.board.dto.BoardDeleteRequest
 import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
+import com.b2.backoffice.domain.board.model.Board
+import com.b2.backoffice.domain.board.model.toResponse
+import com.b2.backoffice.domain.board.repository.BoardRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class BoardServiceImpl : BoardService {
+class BoardServiceImpl (
+    private val boardRepository: BoardRepository
+): BoardService {
     override fun getBoardList(): List<BoardResponse> {
-        TODO("Not yet implemented")
+
+        // findAllByUserId
+
+        TODO()
     }
 
     override fun getBoard(boardId: Long): BoardResponse {
-        TODO("Not yet implemented")
+        return boardRepository.findByIdOrNull(boardId)
+            ?.toResponse()
+            ?:throw IllegalArgumentException()
     }
 
     override fun createBoard(request: BoardCreateRequest): BoardResponse {
-        TODO("Not yet implemented")
+        return boardRepository.save(
+            Board(
+                    title = request.title,
+                    contents = request.contents,
+                )
+            ).toResponse()
     }
 
     override fun updateBoard(boardId: Long, request: BoardUpdateRequest): BoardResponse {
-        TODO("Not yet implemented")
+
+        // 비밀번호 검증
+
+        var Board = boardRepository.findByIdOrNull(boardId)
+            ?:throw IllegalArgumentException()
+
+        Board.title = request.title
+        Board.contents = request.contents
+
+        return boardRepository.save(Board).toResponse()
     }
 
     override fun deleteBoard(boardId: Long, request: BoardDeleteRequest) {
-        TODO("Not yet implemented")
+
+        // 비밀번호 검증
+
+        val Board = boardRepository.findByIdOrNull(boardId)
+            ?:throw IllegalArgumentException()
+
+        boardRepository.delete(Board)
     }
 }
