@@ -3,11 +3,10 @@ package com.b2.backoffice.domain.user.model
 import com.b2.backoffice.domain.user.dto.UserResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @Entity
 @Table(name = "users")
-class User(
+class UserEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
 
@@ -29,7 +28,7 @@ class User(
     val id : Int? = null
 }
 
-fun User.toResponse() : UserResponse {
+fun UserEntity.toResponse() : UserResponse {
     return UserResponse(
         id = id!!,
         createAt = createdAt,
