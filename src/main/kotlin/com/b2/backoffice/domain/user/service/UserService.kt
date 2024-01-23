@@ -1,6 +1,6 @@
-package com.b2.backoffice.user.service
+package com.b2.backoffice.domain.user.service
 
-import com.b2.backoffice.user.dto.*
+import com.b2.backoffice.domain.user.dto.*
 
 interface UserService {
     fun signUp(request : UserSignUpRequest) : UserResponse

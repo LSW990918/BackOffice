@@ -1,7 +1,7 @@
-package com.b2.backoffice.user.controller
+package com.b2.backoffice.domain.user.controller
 
-import com.b2.backoffice.user.dto.*
-import com.b2.backoffice.user.service.UserService
+import com.b2.backoffice.domain.user.service.UserService
+import com.b2.backoffice.domain.user.dto.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

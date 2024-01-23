@@ -1,6 +1,6 @@
-package com.b2.backoffice.user.model
+package com.b2.backoffice.domain.user.model
 
-import com.b2.backoffice.user.dto.UserResponse
+import com.b2.backoffice.domain.user.dto.UserResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -29,7 +29,7 @@ class User(
     val id : Int? = null
 }
 
-fun User.toResponse() : UserResponse{
+fun User.toResponse() : UserResponse {
     return UserResponse(
         id = id!!,
         createAt = createdAt,
