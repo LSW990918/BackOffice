@@ -5,6 +5,8 @@ import com.b2.backoffice.domain.user.model.UserRole
 import com.b2.backoffice.domain.user.model.toResponse
 import com.b2.backoffice.domain.user.repository.UserRepository
 import com.b2.backoffice.domain.user.dto.*
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -16,6 +18,7 @@ class UserServiceImpl(
         if (userRepository.existsByEmail(request.email))
             throw IllegalStateException() // "Email Exists"
 
+
         return userRepository.save(
             User(
                 email = request.email,
@@ -24,7 +27,8 @@ class UserServiceImpl(
                 role = when(request.role.uppercase()){
                     "USER" -> UserRole.USER
                     "MANAGER" -> UserRole.MANAGER
-                    else -> throw IllegalStateException() // "Invalid Role"
+                    else -> throw IllegalStateException("Invalid Role") // "Invalid Role"
+
                 }
             )
         ).toResponse()
@@ -47,15 +51,35 @@ class UserServiceImpl(
 
     override fun updateUser(userId: Int, request: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdOrNull(userId.toLong())
-            ?:throw IllegalArgumentException()
+            ?:throw IllegalArgumentException("Invalid id")
+
+
 
         // 비밀번호 검증
+
+
+        if(user.passwordList == null)
+        {
+            user.passwordList = listOf( request.newPassword )
+        }
+        else if(request.newPassword in user.passwordList!!)
+        {
+            throw IllegalArgumentException("password already in") // 이미 사용중인 패스워드 예외 처리
+        }
+        else if(user.passwordList!!.size < 3)
+        {
+            user.passwordList = listOf(request.newPassword) + user.passwordList!!
+        }
+        else
+        {
+            user.passwordList = user.passwordList!!.drop(1).plus(request.newPassword)
+        }
 
         user.nickName = request.nickName
         return userRepository.save(user).toResponse()
     }
 
-    override fun deleteUser(userId : Int, request: UserDeleteRequest) {
+    override fun deleteUser(userId : Int) {
         val user = userRepository.findByIdOrNull(userId.toLong())
             ?:throw IllegalArgumentException()
 

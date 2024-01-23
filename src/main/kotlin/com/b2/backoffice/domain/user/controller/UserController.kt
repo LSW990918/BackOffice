@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.swing.text.PasswordView
 
 @RestController
 @RequestMapping("/users")
@@ -43,11 +44,11 @@ class UserController(
     }
     @DeleteMapping("/{userId}")
     fun deleteUser(
-        @RequestBody request: UserDeleteRequest,
+        password : String,
         @PathVariable userId: Int,
     ): ResponseEntity<Unit>
     {
-        userService.deleteUser(userId, request)
+        userService.deleteUser(userId)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

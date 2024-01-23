@@ -9,5 +9,5 @@ interface UserService {
     fun logOut()
 
     fun updateUser(userId : Int, request : UserUpdateRequest) : UserResponse
-    fun deleteUser(userId : Int, request: UserDeleteRequest)
+    fun deleteUser(userId : Int)
 }

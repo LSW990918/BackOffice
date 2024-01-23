@@ -1,6 +1,7 @@
 package com.b2.backoffice.domain.user.model
 
 import com.b2.backoffice.domain.user.dto.UserResponse
+import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -16,6 +17,11 @@ class User(
 
     @Column(name = "password")
     val password : String,
+
+    @ElementCollection
+    @Column(name = "password_list")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    var passwordList: List<String>? = null,
 
     @Column(name = "nickName")
     var nickName : String,
