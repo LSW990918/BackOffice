@@ -31,7 +31,6 @@ noArg {
     annotation("jakarta.persistence.Embeddable")
 }
 
-
 allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.MappedSuperclass")
@@ -51,6 +50,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     // 어플리케이션이 실행될 때만 DB 드라이버를 설치하겠다.
     runtimeOnly("org.postgresql:postgresql")
+
+
     // H2 database
     implementation("com.h2database:h2")
     runtimeOnly ("com.h2database:h2")
