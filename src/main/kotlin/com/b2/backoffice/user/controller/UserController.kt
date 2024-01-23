@@ -45,7 +45,7 @@ class UserController(
     fun deleteUser(
         @RequestBody request: UserDeleteRequest,
         @PathVariable userId: Int,
-    ): ResponseEntity<UserResponse>
+    ): ResponseEntity<Unit>
     {
         userService.deleteUser(userId, request)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
