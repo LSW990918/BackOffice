@@ -1,10 +1,10 @@
 package com.b2.backoffice.domain.user.service
 
-import com.b2.backoffice.domain.user.model.User
+import com.b2.backoffice.domain.user.dto.*
+import com.b2.backoffice.domain.user.model.UserEntity
 import com.b2.backoffice.domain.user.model.UserRole
 import com.b2.backoffice.domain.user.model.toResponse
 import com.b2.backoffice.domain.user.repository.UserRepository
-import com.b2.backoffice.domain.user.dto.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -17,7 +17,7 @@ class UserServiceImpl(
             throw IllegalStateException() // "Email Exists"
 
         return userRepository.save(
-            User(
+            UserEntity(
                 email = request.email,
                 password = request.password, // 암호화 필요
                 nickName = request.nickname,
@@ -46,7 +46,7 @@ class UserServiceImpl(
     }
 
     override fun updateUser(userId: Int, request: UserUpdateRequest): UserResponse {
-        val user = userRepository.findByIdOrNull(userId.toLong())
+        val user = userRepository.findByIdOrNull(userId)
             ?:throw IllegalArgumentException()
 
         // 비밀번호 검증
@@ -56,7 +56,7 @@ class UserServiceImpl(
     }
 
     override fun deleteUser(userId : Int, request: UserDeleteRequest) {
-        val user = userRepository.findByIdOrNull(userId.toLong())
+        val user = userRepository.findByIdOrNull(userId)
             ?:throw IllegalArgumentException()
 
         // 비밀번호 검증
