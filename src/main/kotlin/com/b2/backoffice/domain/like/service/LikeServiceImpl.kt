@@ -1,4 +1,4 @@
-package com.b2.backoffice.domain.postslike.service
+package com.b2.backoffice.domain.like.service
 
 import com.b2.backoffice.domain.like.dto.LikeResponse
 import com.b2.backoffice.domain.like.repository.LikeRepository

@@ -1,4 +1,4 @@
-package com.b2.backoffice.user.dto
+package com.b2.backoffice.domain.user.dto
 
 import org.h2.bnf.context.DbContents
 

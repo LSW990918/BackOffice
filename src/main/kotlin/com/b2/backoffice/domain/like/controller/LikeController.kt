@@ -2,7 +2,7 @@ package com.b2.backoffice.domain.like.controller
 
 
 import com.b2.backoffice.domain.like.dto.LikeResponse
-import com.b2.backoffice.domain.postslike.service.LikeService
+import com.b2.backoffice.domain.like.service.LikeService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

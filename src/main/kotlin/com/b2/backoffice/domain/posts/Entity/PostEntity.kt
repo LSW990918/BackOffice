@@ -29,7 +29,7 @@ class PostEntity(
     val id : Int? = null
 }
 
-fun PostEntity.toResponse() : PostResponse{
+fun PostEntity.toResponse() : PostResponse {
     return PostResponse(
     id = id!!,
     createAt = createdAt,

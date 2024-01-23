@@ -1,10 +1,10 @@
-package com.b2.backoffice.user.service
+package com.b2.backoffice.domain.user.service
 
-import com.b2.backoffice.user.dto.*
-import com.b2.backoffice.user.model.User
-import com.b2.backoffice.user.model.UserRole
-import com.b2.backoffice.user.model.toResponse
-import com.b2.backoffice.user.repository.UserRepository
+import com.b2.backoffice.domain.user.model.User
+import com.b2.backoffice.domain.user.model.UserRole
+import com.b2.backoffice.domain.user.model.toResponse
+import com.b2.backoffice.domain.user.repository.UserRepository
+import com.b2.backoffice.domain.user.dto.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
