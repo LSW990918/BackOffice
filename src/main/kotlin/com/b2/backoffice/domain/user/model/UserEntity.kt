@@ -4,7 +4,6 @@ import com.b2.backoffice.domain.user.dto.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @Entity
 @Table(name = "users")
