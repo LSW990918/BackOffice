@@ -1,6 +1,6 @@
-package com.b2.backoffice.domain.posts.Entity
+package com.b2.backoffice.domain.post.model
 
-import com.b2.backoffice.domain.posts.dto.PostResponse
+import com.b2.backoffice.domain.post.dto.PostResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

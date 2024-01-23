@@ -1,4 +1,4 @@
-package com.b2.backoffice.domain.posts.dto
+package com.b2.backoffice.domain.post.dto
 
 import java.time.LocalDateTime
 
