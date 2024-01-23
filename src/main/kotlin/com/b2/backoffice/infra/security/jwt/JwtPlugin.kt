@@ -17,6 +17,7 @@ class JwtPlugin(
     @Value("\${auth.jwt.secret}") private val secret : String,
     @Value("\${auth.jwt.accessTokenExpirationHour}") private val accessTokenExpirationHour : Long,
 ) {
+
 //        companion object {
 //        const val SECRET = "gH7kRw9FpD3yN2mQxL5aJcUvZ1oP4bS6" // 아무키 32자 테스트
 //        const val ISSUER = "team.sparta.com"

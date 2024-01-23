@@ -1,4 +1,4 @@
-package com.b2.backoffice.infra.security.jwt
+package com.b2.backoffice.infra.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
