@@ -8,3 +8,8 @@ spring:
     url: jdbc:h2:mem:test
     username: sa
     password:
+auth:
+  jwt:
+    issuer: team.b2.com
+    secret: gH7kRw9FpD3yN2mQxL5aJcUvZ1oP4bS6
+    accessTokenExpirationHour: 168
