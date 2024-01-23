@@ -19,23 +19,25 @@ class SecurityConfig (
     private val accessDeniedHandler: AccessDeniedHandler,
 ){
     @Bean
-    fun filterChain(http : HttpSecurity): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity):SecurityFilterChain{
         return http
-            .httpBasic{it.disable()}
+            .httpBasic{it.disable()}  // 사용하지 않는 필터 끄기
             .formLogin{it.disable()}
-            .csrf{it.disable()}
-            .authorizeHttpRequests {
-                it.requestMatchers(
-                    "/logIn",
-                    "/signUp",
-                    "/swagger-ui/**",
-                    "v3/api-docs/**",
-                ).permitAll()
-                    .anyRequest()
-                    .authenticated()
+            .csrf{ it.disable()} // 일종의 보안 공격 방지. 꺼버림.
+            // 요청에 대한 인가 규칙 정의
+            .authorizeHttpRequests{
+                it.requestMatchers( // 특정 경로 설정 지정
+                    "/users/logIn",
+                    "/users/signUp",
+                    "/swagger-ui/**", // swagger페이지
+                    "v3/api-docs/**", // 내용 docs
+                ).permitAll() // 위 URL은 승인처리
+                    .anyRequest() // 나머지 요청들은
+                    .authenticated() // 인증이 된 사용자만 허용
             }
+            // 기존 UsernamePasswordAuthenticationFilter 가 존재하던 자리에 JwtAuthenticationFilter 추가
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .exceptionHandling{
+            .exceptionHandling{ // 예외 처리 관련 설정
                 it.authenticationEntryPoint(authenticationEntryPoint)
                 it.accessDeniedHandler(accessDeniedHandler) // 에러 연결하기
             }

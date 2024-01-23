@@ -44,11 +44,10 @@ class JwtAuthenticationFilter(
                         principal = principal,
                         details = WebAuthenticationDetailsSource().buildDetails(request)
                     )
-
-                    SecurityContextHolder.getContext()
-
+                    SecurityContextHolder.getContext().authentication = authentication
                 }
         }
+        filterChain.doFilter(request, response)
     }
 
     private fun HttpServletRequest.getBearerToken() : String?{ // Bearer토큰이 없을 수도 있음
