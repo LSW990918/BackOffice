@@ -28,14 +28,3 @@ class PostEntity(
     @GeneratedValue(strategy = GenerationType. IDENTITY)
     val id : Int? = null
 }
-
-fun PostEntity.toResponse() : PostResponse {
-    return PostResponse(
-    id = id!!,
-    createAt = createdAt,
-    nickname = nickname,
-    title = title,
-    contents = contents,
-    likes = likes,
-    )
-}
