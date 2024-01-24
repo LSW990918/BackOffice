@@ -29,7 +29,7 @@ class UserServiceImpl(
             UserEntity(
                 email = request.email,
                 password = pw,
-                passwordList = mutableListOf(pw),
+                //passwordList = mutableListOf(pw),
                 nickName = request.nickname,
                 role = when (request.role.uppercase()) {
                     "USER" -> UserRole.USER
@@ -89,23 +89,23 @@ class UserServiceImpl(
             throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
         }
 
-        val newPassword = passwordEncoder.encode(request.newPassword)
-
-        chkPassword(request.password, user.password)
-
-        for (i in user.passwordList) {
-            if (passwordEncoder.matches(request.newPassword, i))
-                throw IllegalArgumentException("password already used")
-        }
-
-        if (user.passwordList.size < 3) {
-            user.passwordList.add(newPassword)
-        } else {
-            user.passwordList.add(newPassword)
-            user.passwordList.removeAt(0)
-        }
-
-        user.password = newPassword
+//        val newPassword = passwordEncoder.encode(request.newPassword)
+//
+//        chkPassword(request.password, user.password)
+//
+//        for (i in user.passwordList) {
+//            if (passwordEncoder.matches(request.newPassword, i))
+//                throw IllegalArgumentException("password already used")
+//        }
+//
+//        if (user.passwordList.size < 3) {
+//            user.passwordList.add(newPassword)
+//        } else {
+//            user.passwordList.add(newPassword)
+//            user.passwordList.removeAt(0)
+//        }
+//
+//        user.password = newPassword
         user.nickName = request.nickName
         return userRepository.save(user).toResponse()
     }

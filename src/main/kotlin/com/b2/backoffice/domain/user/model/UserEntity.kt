@@ -10,7 +10,7 @@ class UserEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "isdeleted")
+    @Column(name = "is_deleted")
     var isDeleted : Boolean = false,
 
     @Column(name = "email")
@@ -19,12 +19,12 @@ class UserEntity(
     @Column(name = "password")
     var password : String,
 
-    @ElementCollection
-    @Column(name = "password_list")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    var passwordList: MutableList<String>,
+//    @ElementCollection
+//    @Column(name = "password_list")
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    var passwordList: MutableList<String>,
 
-    @Column(name = "nickName")
+    @Column(name = "nickname")
     var nickName : String,
 
     @Column(name = "role")

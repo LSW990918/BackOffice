@@ -1,15 +1,5 @@
-spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test
-    username: sa
-    password:
 auth:
   jwt:
-    issuer: team.b2.com
-    secret: gH7kRw9FpD3yN2mQxL5aJcUvZ1oP4bS6
-    accessTokenExpirationHour: 168
+    issuer : team.sparta.com
+    secret : gH7kRw9FpD3yN2mQxL5aJcUvZ1oP4bS6
+    accessTokenExpirationHour : 168
