@@ -3,16 +3,21 @@ package com.b2.backoffice.domain.post.service
 import com.b2.backoffice.domain.post.dto.PostCreateRequest
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostUpdateRequest
+import com.b2.backoffice.domain.post.dto.PostWithCommentResponse
 import com.b2.backoffice.domain.post.model.PostEntity
 import com.b2.backoffice.domain.post.repository.PostRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class PostServiceImpl (
+class PostServiceImpl(
     private val postRepository: PostRepository
-): PostService {
+) : PostService {
     override fun getPostList(boardId: Int): List<PostResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllPosts(): List<PostResponse> {
         TODO("Not yet implemented")
     }
 
@@ -36,7 +41,7 @@ class PostServiceImpl (
 
 }
 
-fun PostEntity.toResponse() : PostResponse {
+fun PostEntity.toResponse(): PostResponse {
     return PostResponse(
         id = id!!,
         createAt = createdAt,
