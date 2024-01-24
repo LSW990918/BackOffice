@@ -5,7 +5,7 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "users")
+@Table(name = "app_users")
 class UserEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
