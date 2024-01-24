@@ -20,13 +20,9 @@ class BoardEntity(
 
     @Column(name = "contents")
     var contents : String,
-
 ){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Int? = null
 }
-
-
-
 

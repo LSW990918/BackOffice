@@ -21,7 +21,7 @@ class BoardServiceImpl (
     }
 
     override fun getBoard(boardId: Int): BoardResponse {
-        return boardRepository.findByIdOrNull(boardId.toLong())
+        return boardRepository.findByIdOrNull(boardId)
             ?.toResponse()
             ?:throw IllegalArgumentException()
     }
@@ -39,7 +39,7 @@ class BoardServiceImpl (
 
         // 비밀번호 검증
 
-        var board = boardRepository.findByIdOrNull(boardId.toLong())
+        var board = boardRepository.findByIdOrNull(boardId)
             ?:throw IllegalArgumentException()
 
         board.title = request.title
@@ -52,7 +52,8 @@ class BoardServiceImpl (
 
         // 비밀번호 검증
 
-        val board = boardRepository.findByIdOrNull(boardId.toLong())
+
+        val Board = boardRepository.findByIdOrNull(boardId)
             ?:throw IllegalArgumentException()
 
 
@@ -60,7 +61,6 @@ class BoardServiceImpl (
         board.isDeleted = true
     }
 }
-
 fun BoardEntity.toResponse() : BoardResponse
 {
     return BoardResponse(

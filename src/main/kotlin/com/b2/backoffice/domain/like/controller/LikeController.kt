@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/posts/{postId}/like")
 @RestController
 class LikeController(
-    private val likeService: LikeService
+    private val likeService: LikeService,
 ) {
 
     @GetMapping
@@ -21,16 +21,20 @@ class LikeController(
     }
 
     @PostMapping
-    fun createLike(@PathVariable postId: Int): ResponseEntity<Unit> {
+    fun createLike(
+        userId: Int,
+        @PathVariable postId: Int): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(likeService.createLike(1,postId))//유저아이디 추가예정
+            .body(likeService.createLike(userId, postId))//유저아이디 추가예정
     }
 
     @DeleteMapping
-    fun deleteLike(@PathVariable postId: Int): ResponseEntity<Unit> {
+    fun deleteLike(
+        userId: Int,
+        @PathVariable postId: Int): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
-            .body(likeService.deleteLike(1, postId))//유저아이디 추가예정
+            .body(likeService.deleteLike(userId, postId))//유저아이디 추가예정
     }
 }
