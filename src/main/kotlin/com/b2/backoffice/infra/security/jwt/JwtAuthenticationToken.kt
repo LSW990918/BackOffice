@@ -14,7 +14,7 @@ class JwtAuthenticationToken(
         super.setAuthenticated(true)
         super.setDetails(details)
     }
-    override fun getPrincipal() = null
+    override fun getPrincipal() = principal
     override fun getCredentials() = null
 
     override fun isAuthenticated(): Boolean {

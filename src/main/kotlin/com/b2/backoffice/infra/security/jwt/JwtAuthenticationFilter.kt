@@ -30,7 +30,7 @@ class JwtAuthenticationFilter(
         {
             jwtPlugin.validateToken(jwt)
                 .onSuccess {
-                    val userId = it.payload.subject.toLong()
+                    val userId = it.payload.subject.toInt()
                     val role = it.payload.get("role", String::class.java)
                     val email = it.payload.get("email", String::class.java)
 
