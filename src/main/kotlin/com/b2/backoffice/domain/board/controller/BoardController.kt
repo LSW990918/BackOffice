@@ -7,6 +7,7 @@ import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
 import com.b2.backoffice.domain.board.service.BoardService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -22,17 +23,20 @@ import org.springframework.web.bind.annotation.RestController
 class BoardController(
     private var boardService: BoardService
 ) {
+    @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
     @GetMapping()
     fun getBoardList() : ResponseEntity<List<BoardResponse>>{
-
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardList())
     }
+
+    @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
     @GetMapping("/{boardId}")
     fun getBoard( @PathVariable boardId : Int )
                   : ResponseEntity<BoardResponse>{
 
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId))
     }
+    @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
     @PostMapping()
     fun createBoard(
         @RequestBody request : BoardCreateRequest
@@ -49,7 +53,7 @@ class BoardController(
         return ResponseEntity.status(HttpStatus.OK).body(boardService.updateBoard(boardId, request))
     }
 
-    @DeleteMapping("/{boardId}")
+    @PutMapping("/{boardId}")
     fun deleteBoard(
         @PathVariable boardId : Int,
         @RequestBody request : BoardDeleteRequest
