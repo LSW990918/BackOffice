@@ -15,11 +15,11 @@ class CommentEntity(
     var content: String,
 
     @ManyToOne
-    @JoinColumn(name = "userid", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     var user: UserEntity,
 
     @ManyToOne
-    @JoinColumn(name = "postid", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     var post: PostEntity,
 
 ) {
