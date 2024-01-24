@@ -80,7 +80,6 @@ class UserServiceImpl(
     }
 
     override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
-
         val user = userRepository.findByIdOrNull(userId)
             ?: throw IllegalArgumentException("Invalid id")
 
@@ -114,6 +113,7 @@ class UserServiceImpl(
     override fun deleteUser(userPrincipal: UserPrincipal, userId: Int, password: String) {
         val user = userRepository.findByIdOrNull(userId)
             ?: throw IllegalArgumentException()
+
 
         chkPassword(password, user.password)
 
