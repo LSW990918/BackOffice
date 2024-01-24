@@ -19,7 +19,7 @@ class UserServiceImpl(
 ) : UserService {
 
     @Transactional
-    override fun signUp(request: UserSignUpRequest) : UserResponse {
+    override fun signUp(request: UserSignUpRequest): UserResponse {
         if (userRepository.existsByEmail(request.email))
             throw IllegalStateException("Email Exists")
 
@@ -29,9 +29,9 @@ class UserServiceImpl(
             UserEntity(
                 email = request.email,
                 password = pw,
-                passwordList = mutableListOf( pw ),
+                passwordList = mutableListOf(pw),
                 nickName = request.nickname,
-                role = when(request.role.uppercase()){
+                role = when (request.role.uppercase()) {
                     "USER" -> UserRole.USER
                     "MANAGER" -> UserRole.MANAGER
                     "ADMIN" -> UserRole.ADMIN
@@ -41,9 +41,9 @@ class UserServiceImpl(
         ).toResponse()
     }
 
-    override fun logIn(request: UserLogInRequest) : UserLogInResponse {
+    override fun logIn(request: UserLogInRequest): UserLogInResponse {
         val user = userRepository.findByEmail(request.email)
-            ?:throw  IllegalArgumentException("Invalid email") //ModelNotFound() 추가 필요
+            ?: throw IllegalArgumentException("Invalid email") //ModelNotFound() 추가 필요
 
         chkPassword(request.password, user.password)
 
@@ -61,43 +61,47 @@ class UserServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getUserList() : List<UserResponse> {
+    override fun getUserList(): List<UserResponse> {
 
-        return userRepository.findAll().map{ it.toResponse() }
-            ?:throw IllegalArgumentException("Invalid id")
+        return userRepository.findAll().map { it.toResponse() }
+            ?: throw IllegalArgumentException("Invalid id")
     }
 
     // my profile 과 관리자모드 유저프로파일 분리 ?
-    override fun getUser(userId: Int) : UserResponse {
+    override fun getUser(userPrincipal: UserPrincipal, userId: Int): UserResponse {
+
+        if (userPrincipal.authoricies.toString() != "[ROLE_ADMIN]" && userPrincipal.id != userId) {
+            throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
+        }
+
         return userRepository.findByIdOrNull(userId)
             ?.toResponse()
-            ?:throw IllegalArgumentException("Invalid id")
+            ?: throw IllegalArgumentException("Invalid id")
     }
 
     override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
 
-        println(userPrincipal.authoricies)
-
         val user = userRepository.findByIdOrNull(userId)
-            ?:throw IllegalArgumentException("Invalid id")
+            ?: throw IllegalArgumentException("Invalid id")
 
+
+        // User이면 본인 userId 인지 검증 필요
+        if (userPrincipal.authoricies.toString() != "[ROLE_ADMIN]" && userPrincipal.id != userId) {
+            throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
+        }
+
+        val newPassword = passwordEncoder.encode(request.newPassword)
 
         chkPassword(request.password, user.password)
 
-        var newPassword = passwordEncoder.encode(request.newPassword)
-
-        for(i in user.passwordList)
-        {
-            if ( passwordEncoder.matches(request.newPassword , i) )
+        for (i in user.passwordList) {
+            if (passwordEncoder.matches(request.newPassword, i))
                 throw IllegalArgumentException("password already used")
         }
 
-        if(user.passwordList.size < 3)
-        {
+        if (user.passwordList.size < 3) {
             user.passwordList.add(newPassword)
-        }
-        else
-        {
+        } else {
             user.passwordList.add(newPassword)
             user.passwordList.removeAt(0)
         }
@@ -107,27 +111,26 @@ class UserServiceImpl(
         return userRepository.save(user).toResponse()
     }
 
-    override fun deleteUser(userPrincipal: UserPrincipal, userId : Int, password: String) {
+    override fun deleteUser(userPrincipal: UserPrincipal, userId: Int, password: String) {
         val user = userRepository.findByIdOrNull(userId)
-            ?:throw IllegalArgumentException()
+            ?: throw IllegalArgumentException()
 
         chkPassword(password, user.password)
 
-         // InvalidCredentialException 으로 변경 필요
+        // InvalidCredentialException 으로 변경 필요
 
         userRepository.delete(user)
     }
 
     fun chkPassword(rawPw: String, encodePw: String) {
-        if(!passwordEncoder.matches(rawPw, encodePw))
+        if (!passwordEncoder.matches(rawPw, encodePw))
             throw IllegalArgumentException("Invalid password")
 
     }
 }
 
 
-
-fun UserEntity.toResponse() : UserResponse {
+fun UserEntity.toResponse(): UserResponse {
     return UserResponse(
         id = id!!,
         createAt = createdAt,

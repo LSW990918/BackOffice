@@ -10,7 +10,7 @@ interface UserService {
     fun logOut()
 
     fun getUserList() : List<UserResponse>?
-    fun getUser(userId: Int) : UserResponse?
+    fun getUser(userPrincipal: UserPrincipal, userId: Int) : UserResponse?
 
     fun updateUser(userPrincipal: UserPrincipal, userId : Int, request : UserUpdateRequest) : UserResponse
     fun deleteUser(userPrincipal: UserPrincipal, userId : Int, password: String)

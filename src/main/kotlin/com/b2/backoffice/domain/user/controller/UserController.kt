@@ -52,7 +52,7 @@ class UserController(
         @PathVariable userId : Int
     ) : ResponseEntity<UserResponse>
     {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userId))
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userPrincipal, userId))
     }
 
 
