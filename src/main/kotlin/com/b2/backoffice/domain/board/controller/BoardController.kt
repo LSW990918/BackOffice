@@ -23,20 +23,18 @@ import org.springframework.web.bind.annotation.RestController
 class BoardController(
     private var boardService: BoardService
 ) {
-    @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
     @GetMapping()
     fun getBoardList() : ResponseEntity<List<BoardResponse>>{
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardList())
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
     @GetMapping("/{boardId}")
     fun getBoard( @PathVariable boardId : Int )
                   : ResponseEntity<BoardResponse>{
 
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId))
     }
-    @PreAuthorize("hasRole('USER') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     fun createBoard(
         @RequestBody request : BoardCreateRequest
@@ -44,7 +42,8 @@ class BoardController(
 
         return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(request))
     }
-    @PutMapping("/{boardId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PutMapping("/{boardId}/update")
     fun updateBoard(
         @PathVariable boardId: Int,
         @RequestBody request : BoardUpdateRequest
@@ -53,13 +52,15 @@ class BoardController(
         return ResponseEntity.status(HttpStatus.OK).body(boardService.updateBoard(boardId, request))
     }
 
-    @PutMapping("/{boardId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{boardId}/delete")
     fun deleteBoard(
         @PathVariable boardId : Int,
         @RequestBody request : BoardDeleteRequest
     ) : ResponseEntity<Unit> {
 
         boardService.deleteBoard(boardId, request)
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

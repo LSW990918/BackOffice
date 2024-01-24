@@ -31,7 +31,6 @@ class BoardServiceImpl (
             BoardEntity(
                     title = request.title,
                     contents = request.contents,
-                    isDeleted = false,
                 )
             ).toResponse()
     }

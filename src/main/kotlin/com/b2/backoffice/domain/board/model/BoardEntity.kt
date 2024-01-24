@@ -13,7 +13,7 @@ class BoardEntity(
     val createdAt : LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "isdeleted")
-    var isDeleted : Boolean,
+    var isDeleted : Boolean = false,
 
     @Column(name = "title")
     var title : String,
