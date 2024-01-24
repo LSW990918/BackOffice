@@ -5,6 +5,7 @@ import com.b2.backoffice.domain.user.dto.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -34,6 +35,23 @@ class UserController(
         return ResponseEntity.status(HttpStatus.OK).body(userService.logIn(request))
     }
 
+
+    @GetMapping()
+    fun getUserList(
+    ) : ResponseEntity<List<UserResponse>>
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserList())
+    }
+
+    @GetMapping("/{userId}/profile")
+    fun getUser(
+        @PathVariable userId : Int
+    ) : ResponseEntity<UserResponse>
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userId))
+    }
+
+
     @PutMapping("/{userId}/profile")
     fun updateUser(
         @RequestBody request: UserUpdateRequest,
@@ -48,7 +66,7 @@ class UserController(
         @PathVariable userId: Int,
     ): ResponseEntity<Unit>
     {
-        userService.deleteUser(userId)
+        userService.deleteUser(userId, password)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

@@ -1,13 +1,12 @@
 package com.b2.backoffice.domain.user.model
 
-import com.b2.backoffice.domain.user.dto.UserResponse
 import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
-class User(
+class UserEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
 
@@ -15,12 +14,12 @@ class User(
     val email : String,
 
     @Column(name = "password")
-    val password : String,
+    var password : String,
 
     @ElementCollection
     @Column(name = "password_list")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    var passwordList: List<String>? = null,
+    var passwordList: MutableList<String>,
 
     @Column(name = "nickName")
     var nickName : String,
@@ -34,12 +33,3 @@ class User(
     val id : Int? = null
 }
 
-fun User.toResponse() : UserResponse {
-    return UserResponse(
-        id = id!!,
-        createAt = createdAt,
-        email = email,
-        nickName = nickName,
-        role = role.name
-    )
-}
