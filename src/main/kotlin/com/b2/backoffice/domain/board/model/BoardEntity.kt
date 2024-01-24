@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "boards")
-class Board(
+class BoardEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
 
@@ -21,7 +21,7 @@ class Board(
     val id : Int? = null
 }
 
-fun Board.toResponse() : BoardResponse
+fun BoardEntity.toResponse() : BoardResponse
 {
     return BoardResponse(
         id = id!!,

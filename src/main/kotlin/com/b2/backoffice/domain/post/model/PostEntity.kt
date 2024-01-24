@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.post.model
 
+
 import com.b2.backoffice.domain.comment.model.CommentEntity
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostWithCommentResponse
@@ -25,6 +26,7 @@ class PostEntity(
     @Column(name = "likes")
     var likes : Int,
 
+
 )
 
 {
@@ -32,6 +34,7 @@ class PostEntity(
     @GeneratedValue(strategy = GenerationType. IDENTITY)
     val id : Int? = null
 }
+
 
 fun PostEntity.toResponse() : PostResponse {
     return PostResponse(
@@ -43,4 +46,5 @@ fun PostEntity.toResponse() : PostResponse {
     likes = likes,
     )
 }
+
 
