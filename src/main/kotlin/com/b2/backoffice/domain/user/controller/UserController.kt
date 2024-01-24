@@ -2,8 +2,11 @@ package com.b2.backoffice.domain.user.controller
 
 import com.b2.backoffice.domain.user.service.UserService
 import com.b2.backoffice.domain.user.dto.*
+import com.b2.backoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.swing.text.PasswordView
 
 @RestController
 @RequestMapping("/users")
@@ -36,6 +38,7 @@ class UserController(
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
     fun getUserList(
     ) : ResponseEntity<List<UserResponse>>
@@ -45,6 +48,7 @@ class UserController(
 
     @GetMapping("/{userId}/profile")
     fun getUser(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @PathVariable userId : Int
     ) : ResponseEntity<UserResponse>
     {
@@ -54,19 +58,21 @@ class UserController(
 
     @PutMapping("/{userId}/profile")
     fun updateUser(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @RequestBody request: UserUpdateRequest,
         @PathVariable userId: Int,
     ): ResponseEntity<UserResponse>
     {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, request))
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userPrincipal,userId, request))
     }
     @DeleteMapping("/{userId}")
     fun deleteUser(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
         password : String,
         @PathVariable userId: Int,
     ): ResponseEntity<Unit>
     {
-        userService.deleteUser(userId, password)
+        userService.deleteUser(userPrincipal,userId, password)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

@@ -4,6 +4,7 @@ import com.b2.backoffice.domain.user.model.UserEntity
 import com.b2.backoffice.domain.user.model.UserRole
 import com.b2.backoffice.domain.user.repository.UserRepository
 import com.b2.backoffice.domain.user.dto.*
+import com.b2.backoffice.infra.security.UserPrincipal
 import com.b2.backoffice.infra.security.jwt.JwtPlugin
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -44,8 +45,7 @@ class UserServiceImpl(
         val user = userRepository.findByEmail(request.email)
             ?:throw  IllegalArgumentException("Invalid email") //ModelNotFound() 추가 필요
 
-        if(!passwordEncoder.matches(request.password, user.password))
-            throw IllegalArgumentException("Invalid password") // InvalidCredentialException 으로 변경 필요
+        chkPassword(request.password, user.password)
 
         // 토큰 생성
         return UserLogInResponse(
@@ -62,6 +62,7 @@ class UserServiceImpl(
     }
 
     override fun getUserList() : List<UserResponse> {
+
         return userRepository.findAll().map{ it.toResponse() }
             ?:throw IllegalArgumentException("Invalid id")
     }
@@ -73,13 +74,15 @@ class UserServiceImpl(
             ?:throw IllegalArgumentException("Invalid id")
     }
 
-    override fun updateUser(userId: Int, request: UserUpdateRequest): UserResponse {
+    override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
+
+        println(userPrincipal.authoricies)
+
         val user = userRepository.findByIdOrNull(userId)
             ?:throw IllegalArgumentException("Invalid id")
 
 
-        if(!passwordEncoder.matches(request.password, user.password))
-            throw IllegalArgumentException("Invalid password") // InvalidCredentialException 으로 변경 필요
+        chkPassword(request.password, user.password)
 
         var newPassword = passwordEncoder.encode(request.newPassword)
 
@@ -88,7 +91,6 @@ class UserServiceImpl(
             if ( passwordEncoder.matches(request.newPassword , i) )
                 throw IllegalArgumentException("password already used")
         }
-
 
         if(user.passwordList.size < 3)
         {
@@ -105,16 +107,25 @@ class UserServiceImpl(
         return userRepository.save(user).toResponse()
     }
 
-    override fun deleteUser(userId : Int, password: String) {
+    override fun deleteUser(userPrincipal: UserPrincipal, userId : Int, password: String) {
         val user = userRepository.findByIdOrNull(userId)
             ?:throw IllegalArgumentException()
 
-        if(!passwordEncoder.matches(password, user.password))
-            throw IllegalArgumentException("Invalid password") // InvalidCredentialException 으로 변경 필요
+        chkPassword(password, user.password)
+
+         // InvalidCredentialException 으로 변경 필요
 
         userRepository.delete(user)
     }
+
+    fun chkPassword(rawPw: String, encodePw: String) {
+        if(!passwordEncoder.matches(rawPw, encodePw))
+            throw IllegalArgumentException("Invalid password")
+
+    }
 }
+
+
 
 fun UserEntity.toResponse() : UserResponse {
     return UserResponse(

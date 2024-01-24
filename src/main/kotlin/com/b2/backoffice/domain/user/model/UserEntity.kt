@@ -10,6 +10,9 @@ class UserEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
 
+    @Column(name = "isdeleted")
+    var isDeleted : Boolean = false,
+
     @Column(name = "email")
     val email : String,
 
