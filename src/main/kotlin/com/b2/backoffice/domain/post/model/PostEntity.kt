@@ -10,8 +10,7 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-//@Table(name = "Posts")
-
+@Table(name = "post")
 class PostEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
