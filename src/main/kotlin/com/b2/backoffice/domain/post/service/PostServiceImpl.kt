@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.post.service
 
+import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.post.dto.PostCreateRequest
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostUpdateRequest
@@ -18,24 +19,43 @@ class PostServiceImpl(
     }
 
     override fun getAllPosts(): List<PostResponse> {
-        TODO("Not yet implemented")
+            TODO()
     }
 
-    override fun getPost(boardId: Int, postId: Int): PostResponse {
+    override fun getPost(
+        boardId: Int,
+        postId: Int
+    ): PostResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw Exception()
         return post.toResponse()
     }
 
-    override fun createPost(boardId: Int, request: PostCreateRequest): PostResponse {
-        TODO("Not yet implemented")
+    override fun createPost(
+        boardId: Int,
+        postId: Int,
+        userId: Int,
+        request: PostCreateRequest
+    ): PostResponse {
+        val post = postRepository.findByIdOrNull(postId)
+            ?: throw ModelNotFoundException("post", postId)
     }
 
-    override fun updatePost(boardId: Int, postId: Int, request: PostUpdateRequest): PostResponse {
-        TODO("Not yet implemented")
+    override fun updatePost(
+        boardId: Int,
+        postId: Int,
+        userId: Int,
+        request: PostUpdateRequest
+    ): PostResponse {
+        val post = postRepository.findByIdOrNull(postId)
+            ?: throw ModelNotFoundException("Post", postId)
     }
 
-    override fun deletePost(boardId: Int, postId: Int) {
+    override fun deletePost(
+        boardId: Int,
+        postId: Int,
+        userId: Int,
+        ) {
         TODO("Not yet implemented")
     }
 

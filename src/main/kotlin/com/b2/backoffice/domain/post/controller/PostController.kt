@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.post.controller
 
+import com.b2.backoffice.domain.board.dto.BoardDeleteRequest
 import com.b2.backoffice.domain.post.dto.PostCreateRequest
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostUpdateRequest
@@ -53,5 +54,13 @@ class PostController(
             .status(HttpStatus.OK)
             .body(postService.updatePost(boardId, postId, request))
     }
-}
 
+    @DeleteMapping("/{postId}")
+    fun deletePost(
+        @PathVariable boardId: Int,
+        @PathVariable postId: Int,
+        ) : ResponseEntity<Unit> {
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(postService.deletePost(boardId, postId))
+    }
+}
