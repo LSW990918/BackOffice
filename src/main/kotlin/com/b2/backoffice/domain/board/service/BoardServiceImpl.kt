@@ -52,9 +52,22 @@ class BoardServiceImpl (
 
         // 비밀번호 검증
 
-        val Board = boardRepository.findByIdOrNull(boardId)
+
+        val board = boardRepository.findByIdOrNull(boardId)
             ?:throw IllegalArgumentException()
 
-        boardRepository.delete(Board)
+
+        //boardRepository.delete(Board)
+        board.isDeleted = true
     }
+}
+
+fun BoardEntity.toResponse() : BoardResponse
+{
+    return BoardResponse(
+        id = id!!,
+        createAt = createdAt,
+        title = title,
+        contents = contents
+    )
 }

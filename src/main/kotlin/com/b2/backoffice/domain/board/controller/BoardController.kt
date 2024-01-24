@@ -7,7 +7,7 @@ import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
 import com.b2.backoffice.domain.board.service.BoardService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,15 +24,16 @@ class BoardController(
 ) {
     @GetMapping()
     fun getBoardList() : ResponseEntity<List<BoardResponse>>{
-
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoardList())
     }
+
     @GetMapping("/{boardId}")
     fun getBoard( @PathVariable boardId : Int )
                   : ResponseEntity<BoardResponse>{
 
         return ResponseEntity.status(HttpStatus.OK).body(boardService.getBoard(boardId))
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     fun createBoard(
         @RequestBody request : BoardCreateRequest
@@ -40,7 +41,8 @@ class BoardController(
 
         return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(request))
     }
-    @PutMapping("/{boardId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PutMapping("/{boardId}/update")
     fun updateBoard(
         @PathVariable boardId: Int,
         @RequestBody request : BoardUpdateRequest
@@ -49,13 +51,15 @@ class BoardController(
         return ResponseEntity.status(HttpStatus.OK).body(boardService.updateBoard(boardId, request))
     }
 
-    @DeleteMapping("/{boardId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{boardId}/delete")
     fun deleteBoard(
         @PathVariable boardId : Int,
         @RequestBody request : BoardDeleteRequest
     ) : ResponseEntity<Unit> {
 
         boardService.deleteBoard(boardId, request)
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }
