@@ -58,12 +58,3 @@ class BoardServiceImpl (
         boardRepository.delete(Board)
     }
 }
-fun BoardEntity.toResponse() : BoardResponse
-{
-    return BoardResponse(
-        id = id!!,
-        createAt = createdAt,
-        title = title,
-        contents = contents
-    )
-}
