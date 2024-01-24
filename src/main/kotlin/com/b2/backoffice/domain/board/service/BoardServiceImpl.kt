@@ -4,7 +4,7 @@ import com.b2.backoffice.domain.board.dto.BoardCreateRequest
 import com.b2.backoffice.domain.board.dto.BoardDeleteRequest
 import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
-import com.b2.backoffice.domain.board.model.Board
+import com.b2.backoffice.domain.board.model.BoardEntity
 import com.b2.backoffice.domain.board.model.toResponse
 import com.b2.backoffice.domain.board.repository.BoardRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -29,7 +29,7 @@ class BoardServiceImpl (
 
     override fun createBoard(request: BoardCreateRequest): BoardResponse {
         return boardRepository.save(
-            Board(
+            BoardEntity(
                     title = request.title,
                     contents = request.contents,
                 )

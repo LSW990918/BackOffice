@@ -1,9 +1,11 @@
 package com.b2.backoffice.domain.post.model
 
 
+import com.b2.backoffice.domain.board.model.BoardEntity
 import com.b2.backoffice.domain.comment.model.CommentEntity
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostWithCommentResponse
+import com.b2.backoffice.domain.user.model.UserEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -26,7 +28,21 @@ class PostEntity(
     @Column(name = "likes")
     var likes : Int,
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    val user : UserEntity,
 
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    val board : BoardEntity,
+
+    @OneToMany(
+        orphanRemoval = true,
+        mappedBy = "post",
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.ALL]
+    )
+    var comments : MutableList<CommentEntity> = mutableListOf()
 )
 
 {
