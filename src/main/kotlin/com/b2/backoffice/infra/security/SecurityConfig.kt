@@ -23,7 +23,8 @@ class SecurityConfig (
         return http
             .httpBasic{it.disable()}  // 사용하지 않는 필터 끄기
             .formLogin{it.disable()}
-            .csrf{ it.disable()} // 일종의 보안 공격 방지. 꺼버림.
+            .csrf{ it.disable()} // 일종의 보안 공격 방지. 꺼버림.\
+            .headers { it.frameOptions{ option -> option.sameOrigin() } } // H2 설정
             // 요청에 대한 인가 규칙 정의
             .authorizeHttpRequests{
                 it.requestMatchers( // 특정 경로 설정 지정
@@ -31,6 +32,8 @@ class SecurityConfig (
                     "/users/signUp",
                     "/swagger-ui/**", // swagger페이지
                     "v3/api-docs/**", // 내용 docs
+                    "/h2-console/**",
+                    "/error"       // security 에서 내부적으로 에러 발생시 이 경로로 리다이렉션 됨. -> 새 요청에 인가가 안되서 먼저 에러가 jwt invalid
                 ).permitAll() // 위 URL은 승인처리
                     .anyRequest() // 나머지 요청들은
                     .authenticated() // 인증이 된 사용자만 허용
