@@ -33,6 +33,7 @@ class UserServiceImpl(
                 role = when(request.role.uppercase()){
                     "USER" -> UserRole.USER
                     "MANAGER" -> UserRole.MANAGER
+                    "ADMIN" -> UserRole.ADMIN
                     else -> throw IllegalStateException("Invalid Role")
                 }
             )
