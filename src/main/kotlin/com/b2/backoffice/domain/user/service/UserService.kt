@@ -8,6 +8,9 @@ interface UserService {
 
     fun logOut()
 
+    fun getUserList() : List<UserResponse>?
+    fun getUser(userId: Int) : UserResponse?
+
     fun updateUser(userId : Int, request : UserUpdateRequest) : UserResponse
-    fun deleteUser(userId : Int)
+    fun deleteUser(userId : Int, password: String)
 }
