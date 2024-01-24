@@ -46,7 +46,7 @@ class UserServiceImpl(
     }
 
     override fun updateUser(userId: Int, request: UserUpdateRequest): UserResponse {
-        val user = userRepository.findByIdOrNull(userId.toLong())
+        val user = userRepository.findByIdOrNull(userId)
             ?:throw IllegalArgumentException()
 
         // 비밀번호 검증
@@ -56,7 +56,7 @@ class UserServiceImpl(
     }
 
     override fun deleteUser(userId : Int, request: UserDeleteRequest) {
-        val user = userRepository.findByIdOrNull(userId.toLong())
+        val user = userRepository.findByIdOrNull(userId)
             ?:throw IllegalArgumentException()
 
         // 비밀번호 검증
