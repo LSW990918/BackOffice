@@ -23,6 +23,7 @@ class LikeServiceImpl(
             ?: throw ModelNotFoundException("post", postId)
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("user", userId)
+        //포스트의 유저아이디와 좋아요를 누르는 유저아이디가 같은지 확인
         if (post.user.id == userId) {
             throw Exception()
         }
@@ -38,6 +39,7 @@ class LikeServiceImpl(
     }
 
     override fun deleteLike(userId: Int, postId: Int) {
+        //포스트의 유저아이디와 좋아요를 누르는 유저아이디가 같은지 확인
         if (likeRepository.findByUserIdAndPostId(userId, postId) == null) {
             throw ModelNotFoundException("like", postId)
         }

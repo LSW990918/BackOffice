@@ -24,19 +24,19 @@ class LikeController(
 
     @PostMapping
     fun createLike(
-        @AuthenticationPrincipal user: UserPrincipal,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @PathVariable postId: Int): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(likeService.createLike(user.id, postId))//유저아이디 추가예정
+            .body(likeService.createLike(userPrincipal.id, postId))//유저아이디 추가예정
     }
 
     @DeleteMapping
     fun deleteLike(
-        @AuthenticationPrincipal user: UserPrincipal,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @PathVariable postId: Int): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
-            .body(likeService.deleteLike(user.id, postId))//유저아이디 추가예정
+            .body(likeService.deleteLike(userPrincipal.id, postId))//유저아이디 추가예정
     }
 }
