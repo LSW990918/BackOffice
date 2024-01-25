@@ -54,6 +54,10 @@ dependencies {
     // Spring Security 추가
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    // Validation 추가
+    implementation ("org.springframework.boot:spring-boot-starter-validation")
+
+
     // jwt 관련 라이브러리 중 jjwt 추가
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")

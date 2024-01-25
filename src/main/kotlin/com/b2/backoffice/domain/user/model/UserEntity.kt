@@ -2,6 +2,9 @@ package com.b2.backoffice.domain.user.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.persistence.*
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 
@@ -26,9 +29,11 @@ class UserEntity(
     @JsonInclude(JsonInclude.Include.NON_NULL)
     var passwordList: MutableList<String>,
 
+
     @Column(name = "nickname")
     var nickName : String,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     var role : UserRole,
 )
