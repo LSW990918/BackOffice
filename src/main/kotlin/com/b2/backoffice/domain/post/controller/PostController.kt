@@ -1,12 +1,13 @@
 package com.b2.backoffice.domain.post.controller
 
-import com.b2.backoffice.domain.board.dto.BoardDeleteRequest
 import com.b2.backoffice.domain.post.dto.PostCreateRequest
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostUpdateRequest
 import com.b2.backoffice.domain.post.service.PostService
+import com.b2.backoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -36,32 +37,34 @@ class PostController(
 
     @PostMapping()
     fun createPost(
-        @AuthenticationPrincipal
+        @AuthenticationPrincipal user: UserPrincipal,
         @PathVariable boardId: Int,
         @RequestBody request: PostCreateRequest
     ): ResponseEntity<PostResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(postService.createPost(boardId, request))
+            .body(postService.createPost(boardId, user.id, request))
     }
 
     @PutMapping("/{postId}")
     fun updatePost(
         @PathVariable boardId: Int,
         @PathVariable postId: Int,
+        @AuthenticationPrincipal user: UserPrincipal,
         @RequestBody request: PostUpdateRequest
     ): ResponseEntity<PostResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.updatePost(boardId, postId, request))
+            .body(postService.updatePost(boardId, postId, user.id, request))
     }
 
     @DeleteMapping("/{postId}")
     fun deletePost(
         @PathVariable boardId: Int,
         @PathVariable postId: Int,
+        @AuthenticationPrincipal user: UserPrincipal,
         ) : ResponseEntity<Unit> {
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(postService.deletePost(boardId, postId))
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(postService.deletePost(boardId, postId, user.id))
     }
 }
