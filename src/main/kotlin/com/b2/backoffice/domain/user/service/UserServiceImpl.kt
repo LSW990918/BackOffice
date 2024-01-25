@@ -1,66 +1,141 @@
 package com.b2.backoffice.domain.user.service
 
-import com.b2.backoffice.domain.user.dto.*
 import com.b2.backoffice.domain.user.model.UserEntity
 import com.b2.backoffice.domain.user.model.UserRole
-import com.b2.backoffice.domain.user.model.toResponse
 import com.b2.backoffice.domain.user.repository.UserRepository
+import com.b2.backoffice.domain.user.dto.*
+import com.b2.backoffice.infra.security.UserPrincipal
+import com.b2.backoffice.infra.security.jwt.JwtPlugin
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder,
+    private val jwtPlugin: JwtPlugin,
 ) : UserService {
-    override fun signUp(request: UserSignUpRequest) : UserResponse {
+
+    @Transactional
+    override fun signUp(request: UserSignUpRequest): UserResponse {
         if (userRepository.existsByEmail(request.email))
-            throw IllegalStateException() // "Email Exists"
+            throw IllegalStateException("Email Exists")
+
+        var pw = passwordEncoder.encode(request.password)
 
         return userRepository.save(
             UserEntity(
                 email = request.email,
-                password = request.password, // 암호화 필요
+                password = pw,
+                //passwordList = mutableListOf(pw),
                 nickName = request.nickname,
-                role = when(request.role.uppercase()){
+                role = when (request.role.uppercase()) {
                     "USER" -> UserRole.USER
                     "MANAGER" -> UserRole.MANAGER
-                    else -> throw IllegalStateException() // "Invalid Role"
+                    "ADMIN" -> UserRole.ADMIN
+                    else -> throw IllegalStateException("Invalid Role")
                 }
             )
         ).toResponse()
     }
 
-    override fun logIn(request: UserLogInRequest) : UserLogInResponse {
+    override fun logIn(request: UserLogInRequest): UserLogInResponse {
         val user = userRepository.findByEmail(request.email)
-        //    ?:throw ModelNotFound()
+            ?: throw IllegalArgumentException("Invalid email") //ModelNotFound() 추가 필요
 
-        // 비밀번호 검증
+        chkPassword(request.password, user.password)
 
         // 토큰 생성
-
-        TODO("Not yet implemented")
+        return UserLogInResponse(
+            accessToken = jwtPlugin.generateAccessToken(
+                subject = user.id.toString(),
+                email = user.email,
+                role = user.role.name
+            )
+        )
     }
 
     override fun logOut() {
         TODO("Not yet implemented")
     }
 
-    override fun updateUser(userId: Int, request: UserUpdateRequest): UserResponse {
+    override fun getUserList(): List<UserResponse> {
+
+        return userRepository.findAll().map { it.toResponse() }
+            ?: throw IllegalArgumentException("Invalid id")
+    }
+
+    // my profile 과 관리자모드 유저프로파일 분리 ?
+    override fun getUser(userPrincipal: UserPrincipal, userId: Int): UserResponse {
+
+        if (userPrincipal.authoricies.toString() != "[ROLE_ADMIN]" && userPrincipal.id != userId) {
+            throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
+        }
+
+        return userRepository.findByIdOrNull(userId)
+            ?.toResponse()
+            ?: throw IllegalArgumentException("Invalid id")
+    }
+
+    override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdOrNull(userId)
-            ?:throw IllegalArgumentException()
+            ?: throw IllegalArgumentException("Invalid id")
 
-        // 비밀번호 검증
 
+        // User이면 본인 userId 인지 검증 필요
+        if (userPrincipal.authoricies.toString() != "[ROLE_ADMIN]" && userPrincipal.id != userId) {
+            throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
+        }
+
+//        val newPassword = passwordEncoder.encode(request.newPassword)
+//
+//        chkPassword(request.password, user.password)
+//
+//        for (i in user.passwordList) {
+//            if (passwordEncoder.matches(request.newPassword, i))
+//                throw IllegalArgumentException("password already used")
+//        }
+//
+//        if (user.passwordList.size < 3) {
+//            user.passwordList.add(newPassword)
+//        } else {
+//            user.passwordList.add(newPassword)
+//            user.passwordList.removeAt(0)
+//        }
+//
+//        user.password = newPassword
         user.nickName = request.nickName
         return userRepository.save(user).toResponse()
     }
 
-    override fun deleteUser(userId : Int, request: UserDeleteRequest) {
+    override fun deleteUser(userPrincipal: UserPrincipal, userId: Int, password: String) {
         val user = userRepository.findByIdOrNull(userId)
-            ?:throw IllegalArgumentException()
+            ?: throw IllegalArgumentException()
 
-        // 비밀번호 검증
+
+        chkPassword(password, user.password)
+
+        // InvalidCredentialException 으로 변경 필요
 
         userRepository.delete(user)
     }
+
+    fun chkPassword(rawPw: String, encodePw: String) {
+        if (!passwordEncoder.matches(rawPw, encodePw))
+            throw IllegalArgumentException("Invalid password")
+
+    }
+}
+
+
+fun UserEntity.toResponse(): UserResponse {
+    return UserResponse(
+        id = id!!,
+        createAt = createdAt,
+        email = email,
+        nickName = nickName,
+        role = role.name
+    )
 }

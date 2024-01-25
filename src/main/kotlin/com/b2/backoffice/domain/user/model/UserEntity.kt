@@ -1,22 +1,30 @@
 package com.b2.backoffice.domain.user.model
 
-import com.b2.backoffice.domain.user.dto.UserResponse
+import com.fasterxml.jackson.annotation.JsonInclude
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "users")
+@Table(name = "app_users")
 class UserEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "is_deleted")
+    var isDeleted : Boolean = false,
 
     @Column(name = "email")
     val email : String,
 
     @Column(name = "password")
-    val password : String,
+    var password : String,
 
-    @Column(name = "nickName")
+//    @ElementCollection
+//    @Column(name = "password_list")
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    var passwordList: MutableList<String>,
+
+    @Column(name = "nickname")
     var nickName : String,
 
     @Column(name = "role")
@@ -28,12 +36,3 @@ class UserEntity(
     val id : Int? = null
 }
 
-fun UserEntity.toResponse() : UserResponse {
-    return UserResponse(
-        id = id!!,
-        createAt = createdAt,
-        email = email,
-        nickName = nickName,
-        role = role.name
-    )
-}
