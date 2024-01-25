@@ -19,10 +19,10 @@ class UserEntity(
     @Column(name = "password")
     var password : String,
 
-//    @ElementCollection
-//    @Column(name = "password_list")
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    var passwordList: MutableList<String>,
+    @ElementCollection
+    @Column(name = "password_list")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    var passwordList: MutableList<String>,
 
     @Column(name = "nickname")
     var nickName : String,
