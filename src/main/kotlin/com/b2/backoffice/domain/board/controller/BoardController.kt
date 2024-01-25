@@ -36,7 +36,6 @@ class BoardController(
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
-
     fun createBoard(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @RequestBody request : BoardCreateRequest
@@ -44,7 +43,7 @@ class BoardController(
 
         return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(userPrincipal, request))
     }
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{boardId}/update")
     fun updateBoard(
         @PathVariable boardId: Int,
