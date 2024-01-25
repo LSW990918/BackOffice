@@ -11,6 +11,7 @@ import com.b2.backoffice.domain.post.dto.PostUpdateRequest
 import com.b2.backoffice.domain.post.model.PostEntity
 import com.b2.backoffice.domain.post.repository.PostRepository
 import com.b2.backoffice.domain.user.repository.UserRepository
+import com.b2.backoffice.infra.security.SecurityService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -20,6 +21,7 @@ class PostServiceImpl(
     private val boardRepository: BoardRepository,
     private val userRepository: UserRepository,
     private val likeRepository: LikeRepository,
+    private val securityService: SecurityService,
     private val likeCountRepository: LikeCountRepository,
 ) : PostService {
     override fun getPostList(
@@ -57,13 +59,13 @@ class PostServiceImpl(
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("user", userId)
         val post = PostEntity(
-                title = request.title,
-                contents = request.contents,
-                user = user,
-                board = board,
-                nickname = user.nickName,
-                likes = 0,
-            )
+            title = request.title,
+            contents = request.contents,
+            user = user,
+            board = board,
+            nickname = user.nickName,
+            likes = 0,
+        )
 
         val likeCount = LikeCountEntity(
             post = post,
@@ -80,7 +82,7 @@ class PostServiceImpl(
         userId: Int,
         request: PostUpdateRequest
     ): PostResponse {
-        val board = boardRepository.findByIdOrNull(boardId)
+        var board = boardRepository.findByIdOrNull(boardId)
             ?: throw ModelNotFoundException("board", boardId)
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("user", userId)
@@ -99,7 +101,7 @@ class PostServiceImpl(
         boardId: Int,
         postId: Int,
         userId: Int,
-    ){
+    ) {
         val board = boardRepository.findByIdOrNull(boardId)
             ?: throw ModelNotFoundException("board", boardId)
         val user = userRepository.findByIdOrNull(userId)
@@ -109,7 +111,8 @@ class PostServiceImpl(
         if (post.user.id != user.id) {
             throw Exception()
         }
-        postRepository.delete(post)
+        post.is_deleted = true
+        postRepository.save(post)
     }
 
 }
