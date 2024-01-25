@@ -7,7 +7,7 @@ import com.b2.backoffice.domain.user.model.UserEntity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "like")
+@Table(name = "likes")
 class LikeEntity(
 
     @ManyToOne
