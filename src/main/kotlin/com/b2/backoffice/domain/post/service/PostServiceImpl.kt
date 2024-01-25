@@ -2,6 +2,9 @@ package com.b2.backoffice.domain.post.service
 
 import com.b2.backoffice.domain.board.repository.BoardRepository
 import com.b2.backoffice.domain.exception.ModelNotFoundException
+import com.b2.backoffice.domain.like.repository.LikeRepository
+import com.b2.backoffice.domain.like_count.model.LikeCountEntity
+import com.b2.backoffice.domain.like_count.repository.LikeCountRepository
 import com.b2.backoffice.domain.post.dto.PostCreateRequest
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostUpdateRequest
@@ -16,6 +19,8 @@ class PostServiceImpl(
     private val postRepository: PostRepository,
     private val boardRepository: BoardRepository,
     private val userRepository: UserRepository,
+    private val likeRepository: LikeRepository,
+    private val likeCountRepository: LikeCountRepository,
 ) : PostService {
     override fun getPostList(
         boardId: Int,
@@ -51,8 +56,7 @@ class PostServiceImpl(
             ?: throw ModelNotFoundException("board", boardId)
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("user", userId)
-        return postRepository.save(
-            PostEntity(
+        val post = PostEntity(
                 title = request.title,
                 contents = request.contents,
                 user = user,
@@ -60,7 +64,14 @@ class PostServiceImpl(
                 nickname = user.nickName,
                 likes = 0,
             )
-        ).toResponse()
+
+        val likeCount = LikeCountEntity(
+            post = post,
+            likeCount = likeRepository.findByPostId(post.id!!).size
+        )
+        post.likes = likeCount.likeCount
+        postRepository.save(post)
+        return post.toResponse()
     }
 
     override fun updatePost(
