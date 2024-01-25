@@ -19,7 +19,7 @@ class CommentEntity(
     @Column(name = "nickname", nullable = false)
     var nickName: String,
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "userid", nullable = false)
     var userId: Int,
 
     @ManyToOne
