@@ -11,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/boards/{boardId}/post")
+@RequestMapping("/boards/{boardId}/posts")
 class PostController(
     private var postService: PostService
 ) {

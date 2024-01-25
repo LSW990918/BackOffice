@@ -5,7 +5,7 @@ import jakarta.persistence.*
 import org.hibernate.annotations.Where
 
 @Entity
-@Table(name = "like")
+@Table(name = "like_count")
 @Where(clause = "is_deleted = false")
 class LikeCountEntity(
 
