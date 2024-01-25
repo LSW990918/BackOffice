@@ -33,7 +33,7 @@ class UserServiceImpl(
                 email = request.email,
                 password = pw,
                 passwordList = mutableListOf(pw),
-                nickName = request.nickname,
+                nickName = request.nickName,
                 role = when (request.role.uppercase()) {
                     "USER" -> UserRole.USER
                     "MANAGER" -> UserRole.MANAGER
