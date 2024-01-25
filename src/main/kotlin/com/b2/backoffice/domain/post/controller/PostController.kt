@@ -58,7 +58,7 @@ class PostController(
             .body(postService.updatePost(boardId, postId, user.id, request))
     }
 
-    @DeleteMapping("/{postId}")
+    @PutMapping("/{postId}")
     fun deletePost(
         @PathVariable boardId: Int,
         @PathVariable postId: Int,
