@@ -1,13 +1,14 @@
 package com.b2.backoffice.domain.board.controller
 
 import com.b2.backoffice.domain.board.dto.BoardCreateRequest
-import com.b2.backoffice.domain.board.dto.BoardDeleteRequest
 import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
 import com.b2.backoffice.domain.board.service.BoardService
+import com.b2.backoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -35,11 +36,13 @@ class BoardController(
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
+
     fun createBoard(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @RequestBody request : BoardCreateRequest
     ) : ResponseEntity<BoardResponse>{
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(request))
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardService.createBoard(userPrincipal, request))
     }
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PutMapping("/{boardId}/update")
@@ -54,11 +57,12 @@ class BoardController(
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{boardId}/delete")
     fun deleteBoard(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @PathVariable boardId : Int,
-        @RequestBody request : BoardDeleteRequest
+        password : String,
     ) : ResponseEntity<Unit> {
 
-        boardService.deleteBoard(boardId, request)
+        boardService.deleteBoard(userPrincipal, boardId, password)
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }

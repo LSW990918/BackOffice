@@ -1,23 +1,25 @@
 package com.b2.backoffice.domain.board.service
 
 import com.b2.backoffice.domain.board.dto.BoardCreateRequest
-import com.b2.backoffice.domain.board.dto.BoardDeleteRequest
 import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
 import com.b2.backoffice.domain.board.model.BoardEntity
 import com.b2.backoffice.domain.board.repository.BoardRepository
+import com.b2.backoffice.domain.user.repository.UserRepository
+import com.b2.backoffice.infra.security.SecurityService
+import com.b2.backoffice.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BoardServiceImpl (
-    private val boardRepository: BoardRepository
+    private val userRepository: UserRepository,
+    private val boardRepository: BoardRepository,
+    private val securityService: SecurityService,
 ): BoardService {
     override fun getBoardList(): List<BoardResponse> {
-
-        // findAllByUserId
-
-        TODO()
+        return boardRepository.findAll().map{it.toResponse()}
     }
 
     override fun getBoard(boardId: Int): BoardResponse {
@@ -26,7 +28,8 @@ class BoardServiceImpl (
             ?:throw IllegalArgumentException()
     }
 
-    override fun createBoard(request: BoardCreateRequest): BoardResponse {
+    @Transactional
+    override fun createBoard(userPrincipal: UserPrincipal, request: BoardCreateRequest): BoardResponse {
         return boardRepository.save(
             BoardEntity(
                     title = request.title,
@@ -35,10 +38,8 @@ class BoardServiceImpl (
             ).toResponse()
     }
 
+    @Transactional
     override fun updateBoard(boardId: Int, request: BoardUpdateRequest): BoardResponse {
-
-        // 비밀번호 검증
-
         var board = boardRepository.findByIdOrNull(boardId)
             ?:throw IllegalArgumentException()
 
@@ -48,17 +49,19 @@ class BoardServiceImpl (
         return boardRepository.save(board).toResponse()
     }
 
-    override fun deleteBoard(boardId: Int, request: BoardDeleteRequest) {
+    @Transactional
+    override fun deleteBoard(userPrincipal: UserPrincipal, boardId: Int, password:String) {
+        val user = userRepository.findByIdOrNull(userPrincipal.id)
+            ?: throw IllegalArgumentException()
 
-        // 비밀번호 검증
-
+        securityService.chkPassword(password, user.password)
 
         val board = boardRepository.findByIdOrNull(boardId)
             ?:throw IllegalArgumentException()
 
-
         //boardRepository.delete(Board)
         board.isDeleted = true
+        boardRepository.save(board)
     }
 }
 
