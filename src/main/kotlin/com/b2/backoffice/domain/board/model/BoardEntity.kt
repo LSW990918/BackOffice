@@ -4,9 +4,12 @@ import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.user.dto.UserResponse
 import com.b2.backoffice.domain.user.model.UserEntity
 import jakarta.persistence.*
+import org.hibernate.annotations.Where
+
 import java.time.LocalDateTime
 
 @Entity
+@Where(clause = "is_deleted = false")
 @Table(name = "boards")
 class BoardEntity(
     @Column(name = "created_at")
