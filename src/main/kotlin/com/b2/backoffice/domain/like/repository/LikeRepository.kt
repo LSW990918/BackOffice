@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.transaction.annotation.Transactional
 
 interface LikeRepository : JpaRepository<LikeEntity, Int> {
-    fun findByUserIdAndPostIdOrNull(userId: Int, postId: Int): LikeEntity?
+    fun findByUserIdAndPostId(userId: Int, postId: Int): LikeEntity?
     fun findByPostId(postId: Int): List<LikeEntity>
 
     @Transactional
