@@ -29,6 +29,7 @@ class UserEntity(
     @Column(name = "nickname")
     var nickName : String,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     var role : UserRole,
 )

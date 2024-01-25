@@ -1,8 +1,8 @@
 package com.b2.backoffice.domain.like.controller
 
 
-import com.b2.backoffice.domain.like.dto.LikeResponse
 import com.b2.backoffice.domain.like.service.LikeService
+import com.b2.backoffice.domain.like_count.dto.LikeCountResponse
 import com.b2.backoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ class LikeController(
 ) {
 
     @GetMapping
-    fun getLike(@PathVariable postId: Int): ResponseEntity<LikeResponse> {
+    fun getLike(@PathVariable postId: Int): ResponseEntity<LikeCountResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(likeService.getLike(postId))
@@ -31,7 +31,7 @@ class LikeController(
             .body(likeService.createLike(userPrincipal.id, postId))//유저아이디 추가예정
     }
 
-    @DeleteMapping
+    @PutMapping
     fun deleteLike(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @PathVariable postId: Int): ResponseEntity<Unit> {

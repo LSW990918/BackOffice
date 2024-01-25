@@ -8,8 +8,8 @@ import jakarta.persistence.*
 import org.hibernate.annotations.Where
 
 @Entity
-@Table(name = "like")
-//@Where(clause = "is_deleted = false")
+@Table(name = "likes")
+@Where(clause = "is_deleted = false")
 class LikeEntity(
 
     @ManyToOne
@@ -20,8 +20,8 @@ class LikeEntity(
     @JoinColumn(name = "user_id")
     val user: UserEntity,
 
-//    @Column(name = "is_deleted")
-//    val isDeleted: Boolean = false
+    @Column(name = "is_deleted")
+    var isDeleted: Boolean = false
 
 ) {
     @Id
