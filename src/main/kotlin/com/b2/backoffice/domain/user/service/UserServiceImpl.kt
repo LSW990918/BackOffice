@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.user.service
 
+import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.user.model.UserEntity
 import com.b2.backoffice.domain.user.model.UserRole
 import com.b2.backoffice.domain.user.repository.UserRepository
@@ -23,7 +24,7 @@ class UserServiceImpl(
     @Transactional
     override fun signUp(request: UserSignUpRequest): UserResponse {
         if (userRepository.existsByEmail(request.email))
-            throw IllegalStateException("Email Exists")
+            throw IllegalStateException("Email already Exists")
 
         var pw = passwordEncoder.encode(request.password)
 
@@ -76,13 +77,13 @@ class UserServiceImpl(
 
         return userRepository.findByIdOrNull(userId)
             ?.toResponse()
-            ?: throw IllegalArgumentException("Invalid id")
+            ?: throw throw ModelNotFoundException("User", userId)
     }
 
     @Transactional
     override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalArgumentException("Invalid id")
+            ?: throw ModelNotFoundException("User", userId)
 
         securityService.chkUserId(userPrincipal, userId)
 
@@ -110,7 +111,7 @@ class UserServiceImpl(
     @Transactional
     override fun deleteUser(userPrincipal: UserPrincipal, userId: Int, password: String) {
         val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalArgumentException()
+            ?: throw ModelNotFoundException("User", userId)
 
 
         securityService.chkPassword(password, user.password)

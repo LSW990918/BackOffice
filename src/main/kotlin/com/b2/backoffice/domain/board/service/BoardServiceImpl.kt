@@ -5,6 +5,7 @@ import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
 import com.b2.backoffice.domain.board.model.BoardEntity
 import com.b2.backoffice.domain.board.repository.BoardRepository
+import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.user.repository.UserRepository
 import com.b2.backoffice.infra.security.SecurityService
 import com.b2.backoffice.infra.security.UserPrincipal
@@ -25,7 +26,7 @@ class BoardServiceImpl (
     override fun getBoard(boardId: Int): BoardResponse {
         return boardRepository.findByIdOrNull(boardId)
             ?.toResponse()
-            ?:throw IllegalArgumentException()
+            ?:throw ModelNotFoundException("Board", boardId)
     }
 
     @Transactional
@@ -41,7 +42,7 @@ class BoardServiceImpl (
     @Transactional
     override fun updateBoard(boardId: Int, request: BoardUpdateRequest): BoardResponse {
         var board = boardRepository.findByIdOrNull(boardId)
-            ?:throw IllegalArgumentException()
+            ?:throw ModelNotFoundException("Board", boardId)
 
         board.title = request.title
         board.contents = request.contents
@@ -52,12 +53,12 @@ class BoardServiceImpl (
     @Transactional
     override fun deleteBoard(userPrincipal: UserPrincipal, boardId: Int, password:String) {
         val user = userRepository.findByIdOrNull(userPrincipal.id)
-            ?: throw IllegalArgumentException()
+            ?: throw ModelNotFoundException("User", userPrincipal.id)
 
         securityService.chkPassword(password, user.password)
 
         val board = boardRepository.findByIdOrNull(boardId)
-            ?:throw IllegalArgumentException()
+            ?:throw ModelNotFoundException("Board", boardId)
 
         //boardRepository.delete(Board)
         board.isDeleted = true

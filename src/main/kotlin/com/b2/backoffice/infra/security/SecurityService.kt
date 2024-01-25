@@ -1,5 +1,6 @@
 package com.b2.backoffice.infra.security
 
+import com.b2.backoffice.domain.exception.InvalidCredentialsException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -17,6 +18,6 @@ class SecurityService(
 
     fun chkPassword(rawPw: String, encodePw: String) {
         if (!passwordEncoder.matches(rawPw, encodePw))
-            throw IllegalArgumentException("Invalid password")
+            throw InvalidCredentialsException("Invalid password")
     }
 }
