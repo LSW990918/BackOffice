@@ -115,9 +115,9 @@ class UserServiceImpl(
 
         securityService.chkPassword(password, user.password)
 
-        // InvalidCredentialException 으로 변경 필요
+        user.isDeleted = true
 
-        userRepository.delete(user)
+        userRepository.save(user)
     }
 }
 
