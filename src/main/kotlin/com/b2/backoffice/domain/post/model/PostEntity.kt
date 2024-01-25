@@ -29,7 +29,7 @@ class PostEntity(
     @Column(name = "likes")
     var likes: Int,
 
-    @Column(name = "is_deleted = false")
+    @Column(name = "is_deleted")
     var is_deleted: Boolean = false,
 
     @ManyToOne
