@@ -14,12 +14,20 @@ import org.springframework.stereotype.Service
 class PostServiceImpl(
     private val postRepository: PostRepository
 ) : PostService {
-    override fun getPostList(boardId: Int): List<PostResponse> {
-        TODO("Not yet implemented")
+    override fun getPostList(
+        boardId: Int,
+    ): List<PostResponse> {
+        return postRepository.findByBoardId(boardId = boardId).map {
+            it.toResponse()
+        }
+
     }
 
     override fun getAllPosts(): List<PostResponse> {
-            TODO()
+        return postRepository.findAll().map {
+            it.toResponse()
+        }
+
     }
 
     override fun getPost(
@@ -33,12 +41,9 @@ class PostServiceImpl(
 
     override fun createPost(
         boardId: Int,
-        postId: Int,
         userId: Int,
         request: PostCreateRequest
     ): PostResponse {
-        val post = postRepository.findByIdOrNull(postId)
-            ?: throw ModelNotFoundException("post", postId)
     }
 
     override fun updatePost(
@@ -55,8 +60,9 @@ class PostServiceImpl(
         boardId: Int,
         postId: Int,
         userId: Int,
-        ) {
-        TODO("Not yet implemented")
+    ): PostResponse {
+        val post = postRepository.findByIdOrNull(postId)
+            ?
     }
 
 }

@@ -10,7 +10,6 @@ interface PostService {
     fun getAllPosts(): List<PostResponse>
     fun getPost(boardId: Int, postId: Int): PostResponse
     fun createPost(boardId: Int,
-                   postId: Int,
                    userId: Int,
                    request: PostCreateRequest
     ): PostResponse

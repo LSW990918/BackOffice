@@ -36,6 +36,7 @@ class PostController(
 
     @PostMapping()
     fun createPost(
+        @AuthenticationPrincipal
         @PathVariable boardId: Int,
         @RequestBody request: PostCreateRequest
     ): ResponseEntity<PostResponse> {
