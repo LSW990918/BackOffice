@@ -3,8 +3,10 @@ package com.b2.backoffice.domain.like.controller
 
 import com.b2.backoffice.domain.like.dto.LikeResponse
 import com.b2.backoffice.domain.like.service.LikeService
+import com.b2.backoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/posts/{postId}/like")
@@ -22,19 +24,19 @@ class LikeController(
 
     @PostMapping
     fun createLike(
-        userId: Int,
+        @AuthenticationPrincipal user: UserPrincipal,
         @PathVariable postId: Int): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(likeService.createLike(userId, postId))//유저아이디 추가예정
+            .body(likeService.createLike(user.id, postId))//유저아이디 추가예정
     }
 
     @DeleteMapping
     fun deleteLike(
-        userId: Int,
+        @AuthenticationPrincipal user: UserPrincipal,
         @PathVariable postId: Int): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
-            .body(likeService.deleteLike(userId, postId))//유저아이디 추가예정
+            .body(likeService.deleteLike(user.id, postId))//유저아이디 추가예정
     }
 }

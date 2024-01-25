@@ -23,7 +23,7 @@ class LikeServiceImpl(
             ?: throw ModelNotFoundException("post", postId)
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("user", userId)
-/*        if (post.user.id == userId) {
+        if (post.user.id == userId) {
             throw Exception()
         }
         if (likeRepository.findByUserIdAndPostId(userId, postId) == null) {
@@ -33,8 +33,8 @@ class LikeServiceImpl(
                     user
                 )
             )
-            likeCountRepository.findByPostId(postId)
-        } else throw Exception("Like is already exist")*/
+            //likeCountRepository.findByPostId(postId)
+        } else throw Exception("Like is already exist")
     }
 
     override fun deleteLike(userId: Int, postId: Int) {
