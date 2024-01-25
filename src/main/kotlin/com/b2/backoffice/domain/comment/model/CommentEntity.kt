@@ -4,8 +4,10 @@ import com.b2.backoffice.domain.post.model.PostEntity
 import com.b2.backoffice.domain.user.model.UserEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
+import org.hibernate.annotations.Where
 
 @Entity
+@Where(clause = "is_deleted = false")
 @Table(name = "comments")
 class CommentEntity(
     @Column(name = "create_at", nullable = false)
@@ -14,9 +16,16 @@ class CommentEntity(
     @Column(name = "content", nullable = false)
     var content: String,
 
+    @Column(name = "nickname", nullable = false)
+    var nickName: String,
+
+    @Column(name = "user_id", nullable = false)
+    var userId: Int,
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     var user: UserEntity,
+
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
