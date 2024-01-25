@@ -3,10 +3,13 @@ package com.b2.backoffice.domain.user.controller
 import com.b2.backoffice.domain.user.service.UserService
 import com.b2.backoffice.domain.user.dto.*
 import com.b2.backoffice.infra.security.UserPrincipal
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.validation.BindingResult
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/users")
+@Validated
 class UserController(
     private val userService: UserService
 ) {
     @PostMapping("/signUp")
     fun signUp(
-        @RequestBody request : UserSignUpRequest
+        @Valid @RequestBody request : UserSignUpRequest,
     ) : ResponseEntity<UserResponse>
     {
       return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
@@ -31,7 +35,7 @@ class UserController(
 
     @PostMapping("/logIn")
     fun logIn(
-        @RequestBody request : UserLogInRequest
+        @Valid @RequestBody request : UserLogInRequest
     ) : ResponseEntity<UserLogInResponse>
     {
         return ResponseEntity.status(HttpStatus.OK).body(userService.logIn(request))
@@ -59,7 +63,7 @@ class UserController(
     @PutMapping("/{userId}/profile")
     fun updateUser(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @RequestBody request: UserUpdateRequest,
+        @Valid @RequestBody request: UserUpdateRequest,
         @PathVariable userId: Int,
     ): ResponseEntity<UserResponse>
     {
