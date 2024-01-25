@@ -1,9 +1,11 @@
 package com.b2.backoffice.domain.user.service
 
+import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.user.model.UserEntity
 import com.b2.backoffice.domain.user.model.UserRole
 import com.b2.backoffice.domain.user.repository.UserRepository
 import com.b2.backoffice.domain.user.dto.*
+import com.b2.backoffice.infra.security.SecurityService
 import com.b2.backoffice.infra.security.UserPrincipal
 import com.b2.backoffice.infra.security.jwt.JwtPlugin
 import org.springframework.data.repository.findByIdOrNull
@@ -15,13 +17,14 @@ import org.springframework.transaction.annotation.Transactional
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val securityService: SecurityService,
     private val jwtPlugin: JwtPlugin,
 ) : UserService {
 
     @Transactional
     override fun signUp(request: UserSignUpRequest): UserResponse {
         if (userRepository.existsByEmail(request.email))
-            throw IllegalStateException("Email Exists")
+            throw IllegalStateException("Email already Exists")
 
         var pw = passwordEncoder.encode(request.password)
 
@@ -29,7 +32,7 @@ class UserServiceImpl(
             UserEntity(
                 email = request.email,
                 password = pw,
-                //passwordList = mutableListOf(pw),
+                passwordList = mutableListOf(pw),
                 nickName = request.nickname,
                 role = when (request.role.uppercase()) {
                     "USER" -> UserRole.USER
@@ -45,7 +48,7 @@ class UserServiceImpl(
         val user = userRepository.findByEmail(request.email)
             ?: throw IllegalArgumentException("Invalid email") //ModelNotFound() 추가 필요
 
-        chkPassword(request.password, user.password)
+        securityService.chkPassword(request.password, user.password)
 
         // 토큰 생성
         return UserLogInResponse(
@@ -70,62 +73,52 @@ class UserServiceImpl(
     // my profile 과 관리자모드 유저프로파일 분리 ?
     override fun getUser(userPrincipal: UserPrincipal, userId: Int): UserResponse {
 
-        if (userPrincipal.authoricies.toString() != "[ROLE_ADMIN]" && userPrincipal.id != userId) {
-            throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
-        }
+        securityService.chkUserId(userPrincipal, userId)
 
         return userRepository.findByIdOrNull(userId)
             ?.toResponse()
-            ?: throw IllegalArgumentException("Invalid id")
+            ?: throw throw ModelNotFoundException("User", userId)
     }
 
+    @Transactional
     override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalArgumentException("Invalid id")
+            ?: throw ModelNotFoundException("User", userId)
 
+        securityService.chkUserId(userPrincipal, userId)
 
-        // User이면 본인 userId 인지 검증 필요
-        if (userPrincipal.authoricies.toString() != "[ROLE_ADMIN]" && userPrincipal.id != userId) {
-            throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
+        val newPassword = passwordEncoder.encode(request.newPassword)
+
+        securityService.chkPassword(request.password, user.password)
+
+        for (i in user.passwordList) {
+            if (passwordEncoder.matches(request.newPassword, i))
+                throw IllegalArgumentException("password already used")
         }
 
-//        val newPassword = passwordEncoder.encode(request.newPassword)
-//
-//        chkPassword(request.password, user.password)
-//
-//        for (i in user.passwordList) {
-//            if (passwordEncoder.matches(request.newPassword, i))
-//                throw IllegalArgumentException("password already used")
-//        }
-//
-//        if (user.passwordList.size < 3) {
-//            user.passwordList.add(newPassword)
-//        } else {
-//            user.passwordList.add(newPassword)
-//            user.passwordList.removeAt(0)
-//        }
-//
-//        user.password = newPassword
+        if (user.passwordList.size < 3) {
+            user.passwordList.add(newPassword)
+        } else {
+            user.passwordList.add(newPassword)
+            user.passwordList.removeAt(0)
+        }
+
+        user.password = newPassword
         user.nickName = request.nickName
         return userRepository.save(user).toResponse()
     }
 
+    @Transactional
     override fun deleteUser(userPrincipal: UserPrincipal, userId: Int, password: String) {
         val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalArgumentException()
+            ?: throw ModelNotFoundException("User", userId)
 
 
-        chkPassword(password, user.password)
+        securityService.chkPassword(password, user.password)
 
-        // InvalidCredentialException 으로 변경 필요
+        user.isDeleted = true
 
-        userRepository.delete(user)
-    }
-
-    fun chkPassword(rawPw: String, encodePw: String) {
-        if (!passwordEncoder.matches(rawPw, encodePw))
-            throw IllegalArgumentException("Invalid password")
-
+        userRepository.save(user)
     }
 }
 

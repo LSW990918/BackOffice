@@ -1,3 +1,7 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
 auth:
   jwt:
     issuer : team.sparta.com
