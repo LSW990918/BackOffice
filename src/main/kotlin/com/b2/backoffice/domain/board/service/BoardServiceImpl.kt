@@ -3,7 +3,6 @@ package com.b2.backoffice.domain.board.service
 import com.b2.backoffice.domain.board.dto.BoardCreateRequest
 import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
-import com.b2.backoffice.domain.board.dto.toResponse
 import com.b2.backoffice.domain.board.model.BoardEntity
 import com.b2.backoffice.domain.board.repository.BoardRepository
 import com.b2.backoffice.domain.exception.ModelNotFoundException
@@ -56,6 +55,7 @@ class BoardServiceImpl (
         val user = userRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("User", userPrincipal.id)
 
+
         securityService.chkPassword(password, user.password)
 
         val board = boardRepository.findByIdOrNull(boardId)
@@ -65,3 +65,12 @@ class BoardServiceImpl (
     }
 }
 
+fun BoardEntity.toResponse() : BoardResponse
+{
+    return BoardResponse(
+        id = id!!,
+        createAt = createdAt,
+        title = title,
+        contents = contents
+    )
+}

@@ -9,12 +9,3 @@ data class CommentResponse (
     val content: String,
     val createdAt: LocalDateTime?
 )
-
-fun CommentEntity.toResponse(): CommentResponse {
-    return CommentResponse(
-        id = id,
-        content = content,
-        nickname = user.nickName,
-        createdAt = createAt
-    )
-}

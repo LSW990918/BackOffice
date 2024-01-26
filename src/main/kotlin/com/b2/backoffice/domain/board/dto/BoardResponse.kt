@@ -10,12 +10,3 @@ data class BoardResponse(
     var contents : String,
 )
 
-fun BoardEntity.toResponse() : BoardResponse
-{
-    return BoardResponse(
-        id = id!!,
-        createAt = createdAt,
-        title = title,
-        contents = contents
-    )
-}

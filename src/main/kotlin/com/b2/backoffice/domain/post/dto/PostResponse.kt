@@ -12,14 +12,3 @@ data class PostResponse(
     var contents: String,
     var likes: Int,
 )
-
-fun PostEntity.toResponse(): PostResponse {
-    return PostResponse(
-        id = id!!,
-        createAt = createdAt,
-        nickname = nickname,
-        title = title,
-        contents = contents,
-        likes = likes,
-    )
-}

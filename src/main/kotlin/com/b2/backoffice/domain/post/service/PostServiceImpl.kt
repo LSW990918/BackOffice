@@ -3,12 +3,10 @@ package com.b2.backoffice.domain.post.service
 import com.b2.backoffice.domain.board.repository.BoardRepository
 import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.like.repository.LikeRepository
-import com.b2.backoffice.domain.like_count.model.LikeCountEntity
 import com.b2.backoffice.domain.like_count.repository.LikeCountRepository
 import com.b2.backoffice.domain.post.dto.PostCreateRequest
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostUpdateRequest
-import com.b2.backoffice.domain.post.dto.toResponse
 import com.b2.backoffice.domain.post.model.PostEntity
 import com.b2.backoffice.domain.post.repository.PostRepository
 import com.b2.backoffice.domain.user.repository.UserRepository
@@ -98,7 +96,7 @@ class PostServiceImpl(
         postId: Int,
         userId: Int,
     ) {
-        val board = boardRepository.findByIdOrNull(boardId)
+         val board = boardRepository.findByIdOrNull(boardId)
             ?: throw ModelNotFoundException("board", boardId)
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("user", userId)
@@ -110,4 +108,16 @@ class PostServiceImpl(
         board.deletePost(post)
         postRepository.delete(post)
     }
+}
+
+
+fun PostEntity.toResponse(): PostResponse {
+    return PostResponse(
+        id = id!!,
+        createAt = createdAt,
+        nickname = nickname,
+        title = title,
+        contents = contents,
+        likes = likes,
+    )
 }
