@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.like.service
 
+import com.b2.backoffice.domain.exception.InvalidCredentialsException
 import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.like.dto.LikeResponse
 import com.b2.backoffice.domain.like.model.LikeEntity
@@ -35,7 +36,7 @@ class LikeServiceImpl(
             )
             post.increaseLikeCount()
             postRepository.save(post)
-        } else throw Exception("Like is already exist")
+        } else throw InvalidCredentialsException("authentication")
     }
 
     @Transactional
