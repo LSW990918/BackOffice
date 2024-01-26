@@ -19,13 +19,9 @@ class CommentEntity(
     @Column(name = "nickname", nullable = false)
     var nickName: String,
 
-    @Column(name = "userid", nullable = false)
-    var userId: Int,
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     var user: UserEntity,
-
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)

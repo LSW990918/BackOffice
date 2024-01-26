@@ -35,7 +35,6 @@ class CommentServiceImpl(
             post = post,
             user = user,
             nickName = user.nickName,
-            userId = userId,
         )
 
         val savedComment = commentRepository.save(comment)
