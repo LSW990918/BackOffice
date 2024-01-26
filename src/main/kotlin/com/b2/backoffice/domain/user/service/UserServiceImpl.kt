@@ -1,6 +1,15 @@
 package com.b2.backoffice.domain.user.service
 
+import com.b2.backoffice.domain.board.dto.BoardResponse
+import com.b2.backoffice.domain.board.repository.BoardRepository
+import com.b2.backoffice.domain.board.service.toResponse
+import com.b2.backoffice.domain.comment.dto.CommentResponse
+import com.b2.backoffice.domain.comment.repository.CommentRepository
+import com.b2.backoffice.domain.comment.service.toResponse
 import com.b2.backoffice.domain.exception.ModelNotFoundException
+import com.b2.backoffice.domain.post.dto.PostResponse
+import com.b2.backoffice.domain.post.repository.PostRepository
+import com.b2.backoffice.domain.post.service.toResponse
 import com.b2.backoffice.domain.user.model.UserEntity
 import com.b2.backoffice.domain.user.model.UserRole
 import com.b2.backoffice.domain.user.repository.UserRepository
@@ -17,6 +26,9 @@ import java.time.LocalDateTime
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
+    private val boardRepository: BoardRepository,
+    private val postRepository: PostRepository,
+    private val commentRepository: CommentRepository,
     private val passwordEncoder: PasswordEncoder,
     private val securityService: SecurityService,
     private val jwtPlugin: JwtPlugin,
@@ -66,18 +78,27 @@ class UserServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getUserList(): List<UserResponse> {
-
-        return userRepository.findAll().map { it.toResponse() }
-            ?: throw IllegalArgumentException("Invalid id")
-    }
-
     // my profile 과 관리자모드 유저프로파일 분리 ?
     override fun getUser(userPrincipal: UserPrincipal, userId: Int): UserResponse {
         return userRepository.findByIdOrNull(userId)
             ?.toResponse()
             ?: throw throw ModelNotFoundException("User", userId)
     }
+
+
+    override fun getAllUserList(): List<UserResponse>? {
+        return userRepository.findAll().map { it.toResponse() }
+    }
+    override fun getAllBoardList(): List<BoardResponse>? {
+        return boardRepository.findAll().map { it.toResponse() }
+    }
+    override fun getAllPostList(): List<PostResponse>? {
+        return postRepository.findAll().map { it.toResponse() }
+    }
+    override fun getAllCommentList(): List<CommentResponse> {
+        return commentRepository.findAll().map { it.toResponse() }
+    }
+
 
     @Transactional
     override fun resetPassword(userPrincipal: UserPrincipal, userId: Int): UserResponse {
