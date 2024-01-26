@@ -13,7 +13,7 @@
 ## 👩 Team B05
 
 - <strong>장준혁</strong>
-    - 역할 - 보드 CRUD 및 시큐리티 부분
+    - 역할 - 유저, 보드 CRUD 및 시큐리티 부분
 - <strong>주형근</strong>
     - 역할 - 포스트 CRUD
 - <strong>김현주</strong>
@@ -62,3 +62,7 @@
 - 회원가입/로그인
   - JWT Token 기반 인증/인가
     - Spring Security 활용
+- 유저 CRUD
+- 유저 비밀번호 변경 ( 최근 3회 비밀번호 중복 불가 )
+- 유저 비밀번호 초기화 ( 비밀번호 분실 시 )
+- 
