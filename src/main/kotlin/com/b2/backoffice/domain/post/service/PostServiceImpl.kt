@@ -105,8 +105,7 @@ class PostServiceImpl(
         if (post.user.id != user.id) {
             throw Exception()
         }
-        post.is_deleted = true
-        postRepository.save(post)
+        postRepository.delete(post)
     }
 
 }
