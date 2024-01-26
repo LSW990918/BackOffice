@@ -2,7 +2,6 @@ package com.b2.backoffice.domain.post.service
 
 import com.b2.backoffice.domain.board.repository.BoardRepository
 import com.b2.backoffice.domain.exception.ModelNotFoundException
-import com.b2.backoffice.domain.like_count.repository.LikeCountRepository
 import com.b2.backoffice.domain.post.dto.PostCreateRequest
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostUpdateRequest

@@ -15,7 +15,6 @@ import java.time.LocalDateTime
 @Table(name = "app_users")
 @SQLDelete(sql = "UPDATE boards SET is_deleted = true WHERE id = ?") // DELETE 쿼리 날아올 시 대신 실행
 @Where(clause = "is_deleted = false")
-@OnDelete(action = OnDeleteAction.CASCADE)
 class UserEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
