@@ -3,6 +3,7 @@ package com.b2.backoffice.domain.follow.service
 import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.repository.BoardRepository
 import com.b2.backoffice.domain.board.service.toResponse
+import com.b2.backoffice.domain.exception.InvalidCredentialsException
 import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.follow.model.FollowEntity
 import com.b2.backoffice.domain.follow.repository.FollowRepository
@@ -28,7 +29,7 @@ class FollowServiceImpl(
                     board = board
                 )
             )
-        } else throw Exception("follow is already added")
+        } else throw InvalidCredentialsException("authentication")
     }
 
     override fun unfollow(userId: Int, boardId: Int) {

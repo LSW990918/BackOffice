@@ -10,13 +10,13 @@ import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "comments")
 @Where(clause = "is_deleted = false")
+@Table(name = "comments")
 @SQLDelete(sql = "UPDATE comments SET is_deleted = true WHERE id = ?")
 @OnDelete(action = OnDeleteAction.CASCADE)
 class CommentEntity(
-    @Column(name = "create_at", nullable = false)
-    var createAt: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "created_at", nullable = false)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "content", nullable = false)
     var content: String,
