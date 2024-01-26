@@ -66,6 +66,7 @@ class PostServiceImpl(
             nickname = user.nickName,
             likes = 0,
         )
+        board.createPost(post)
         postRepository.save(post)
         return post.toResponse()
     }
@@ -105,6 +106,7 @@ class PostServiceImpl(
         if (post.user.id != user.id) {
             throw Exception()
         }
+        board.deletePost(post)
         postRepository.delete(post)
     }
 
