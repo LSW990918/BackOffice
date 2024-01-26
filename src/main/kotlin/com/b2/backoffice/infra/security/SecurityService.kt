@@ -10,7 +10,7 @@ class SecurityService(
 
 ) {
     fun chkUserId(userPrincipal: UserPrincipal, userId:Int){
-        // MANAGER 나 USER의 경우 본인의 토큰 id 와 조회할 대상의 userId 를 검사함
+        // USER의 경우 본인의 토큰 id 와 조회할 대상의 userId 를 검사함 // 본인 확인
         if (userPrincipal.authoricies.toString() != "[ROLE_ADMIN]" && userPrincipal.id != userId) {
             throw IllegalArgumentException("Invalid role (${userPrincipal.authoricies.toString()})")
         }

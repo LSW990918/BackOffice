@@ -60,23 +60,14 @@ class UserController(
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{userId}/setUser")
-    fun setUser(
+    @PutMapping("/{userId}/resetPassword")
+    fun resetPassword(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @PathVariable userId : Int
     ) : ResponseEntity<UserResponse>
     {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.setUser(userPrincipal, userId))
+        return ResponseEntity.status(HttpStatus.OK).body(userService.resetPassword(userPrincipal, userId))
     }
-
-//    @GetMapping("/{userId}/initPassword")
-//    fun initPassword(
-//        @AuthenticationPrincipal userPrincipal: UserPrincipal,
-//        @PathVariable userId : Int
-//    ) : ResponseEntity<UserResponse>
-//    {
-//        return ResponseEntity.status(HttpStatus.OK).body(userService.setUser(userPrincipal, userId))
-//    }
 
     @PutMapping("/{userId}/profile")
     fun updateUser(

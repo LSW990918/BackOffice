@@ -21,6 +21,9 @@ data class UserSignUpRequest (
     )
     val nickName : String,
 
+    @field:Size(min=1, max= 20, message = "Introduce must be between 1 and 20 characters")
+    val introduce : String,
+
     @field:NotNull(message = "Role must be [ADMIN] or [USER]")
     val role : String,
 )

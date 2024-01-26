@@ -12,6 +12,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class UserServiceImpl(
@@ -21,7 +22,7 @@ class UserServiceImpl(
     private val jwtPlugin: JwtPlugin,
 ) : UserService {
 
-    @Transactional
+
     override fun signUp(request: UserSignUpRequest): UserResponse {
         if (userRepository.existsByEmail(request.email))
             throw IllegalStateException("Email already Exists")
@@ -34,9 +35,10 @@ class UserServiceImpl(
                 password = pw,
                 passwordList = mutableListOf(pw),
                 nickName = request.nickName,
+                introduce = request.introduce,
                 role = when (request.role.uppercase()) {
                     "USER" -> UserRole.USER
-                    "MANAGER" -> UserRole.MANAGER
+                    //"MANAGER" -> UserRole.MANAGER
                     "ADMIN" -> UserRole.ADMIN
                     else -> throw IllegalStateException("Invalid Role")
                 }
@@ -72,46 +74,44 @@ class UserServiceImpl(
 
     // my profile 과 관리자모드 유저프로파일 분리 ?
     override fun getUser(userPrincipal: UserPrincipal, userId: Int): UserResponse {
-
-        securityService.chkUserId(userPrincipal, userId)
-
         return userRepository.findByIdOrNull(userId)
             ?.toResponse()
             ?: throw throw ModelNotFoundException("User", userId)
     }
 
-
-    override fun setUser(userPrincipal: UserPrincipal, userId: Int) : UserResponse?{
-        val user = userRepository.findByIdOrNull(userId)
+    @Transactional
+    override fun resetPassword(userPrincipal: UserPrincipal, userId: Int): UserResponse {
+        var user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("User", userId)
-        TODO()
+
+        val charPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        val randPw =  (1..8)
+            .map { charPool.random() }
+            .joinToString("")
+
+        user = updatePassword(user, randPw)
+
+        user.modifiedAt = LocalDateTime.now()
+        userRepository.save(user)
+
+        return user.toResponse()
     }
 
     @Transactional
     override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
-        val user = userRepository.findByIdOrNull(userId)
+        var user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("User", userId)
 
-        securityService.chkUserId(userPrincipal, userId)
+        securityService.chkUserId(userPrincipal, userId) // ADIMIN 이거나 USER 본인 인지 확인
 
-        val newPassword = passwordEncoder.encode(request.newPassword)
+        securityService.chkPassword(request.password, user.password) // 현재 로그인 된 사용자 비밀번호 재확인
 
-        securityService.chkPassword(request.password, user.password)
+        user = updatePassword(user, request.newPassword)
 
-        for (i in user.passwordList) {
-            if (passwordEncoder.matches(request.newPassword, i))
-                throw IllegalArgumentException("password already used")
-        }
-
-        if (user.passwordList.size < 3) {
-            user.passwordList.add(newPassword)
-        } else {
-            user.passwordList.add(newPassword)
-            user.passwordList.removeAt(0)
-        }
-
-        user.password = newPassword
         user.nickName = request.nickName
+        user.introduce = request.introduce
+
+        user.modifiedAt = LocalDateTime.now()
         return userRepository.save(user).toResponse()
     }
 
@@ -120,12 +120,34 @@ class UserServiceImpl(
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("User", userId)
 
-
+        securityService.chkUserId(userPrincipal,userId)
         securityService.chkPassword(password, user.password)
 
-        user.isDeleted = true
-
+        user.modifiedAt = LocalDateTime.now()
         userRepository.save(user)
+        userRepository.delete(user)
+    }
+
+    fun updatePassword(user : UserEntity, requestPw : String) : UserEntity
+    {
+        for (i in user.passwordList) {
+            if (passwordEncoder.matches(requestPw, i))
+                throw IllegalArgumentException("password already used")
+        }
+
+        val newPw = passwordEncoder.encode(requestPw)
+
+        if (user.passwordList.size < 3) {
+            user.passwordList.add(newPw)
+        }
+        else {
+            user.passwordList.add(newPw)
+            user.passwordList.removeAt(0)
+        }
+
+        user.password = newPw
+
+        return user
     }
 }
 
@@ -134,8 +156,10 @@ fun UserEntity.toResponse(): UserResponse {
     return UserResponse(
         id = id!!,
         createAt = createdAt,
+        modifiedAt = modifiedAt,
         email = email,
         nickName = nickName,
+        introduce = introduce,
         role = role.name
     )
 }
