@@ -77,21 +77,14 @@ class CommentServiceImpl(
     }
 
     @Transactional
-    override fun getCommentByPostId(
+    override fun getCommentListByPostId(
         postId: Int
     ): List<CommentResponse> {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("Post", postId)
-        val commentList = commentRepository.findByPostId(post.id!!).map { it.toResponse() }
-        return commentList
-    }
-
-    override fun getAllComments(): List<CommentResponse> {
-        val commentList = commentRepository.findAll().map { it.toResponse() }
-        return commentList
+        return commentRepository.findByPostId(post.id!!).map { it.toResponse() }
     }
 }
-
 
 fun CommentEntity.toResponse(): CommentResponse {
     return CommentResponse(

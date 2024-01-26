@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.comment.controller
 
+import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.comment.dto.*
 import com.b2.backoffice.domain.comment.service.CommentService
 import com.b2.backoffice.domain.post.service.PostService
@@ -56,13 +57,9 @@ class CommentController(
     }
 
     @GetMapping("/{postId}/comments")
-    fun getCommentByPostId() {
-        TODO()
-    }
-
-    @GetMapping("/comments")
-    fun getAllComments() {
-        TODO()
+    fun getCommentListByPostId( @PathVariable postId: Int )
+                : ResponseEntity<List<CommentResponse>>{
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentListByPostId(postId))
     }
 
 }

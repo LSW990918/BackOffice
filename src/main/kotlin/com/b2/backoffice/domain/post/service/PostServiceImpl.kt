@@ -28,14 +28,11 @@ class PostServiceImpl(
         }
 
     }
-
     override fun getAllPosts(): List<PostResponse> {
         return postRepository.findAll().map {
             it.toResponse()
         }
-
     }
-
     override fun getPost(
         boardId: Int,
         postId: Int
@@ -44,7 +41,6 @@ class PostServiceImpl(
             ?: throw Exception()
         return post.toResponse()
     }
-
     override fun createPost(
         boardId: Int,
         userPrincipal: UserPrincipal,
@@ -65,7 +61,6 @@ class PostServiceImpl(
         postRepository.save(post)
         return post.toResponse()
     }
-
     override fun updatePost(
         boardId: Int,
         postId: Int,
@@ -81,7 +76,6 @@ class PostServiceImpl(
         post.contents = contents
         return post.toResponse()
     }
-
     override fun deletePost(
         boardId: Int,
         postId: Int,
@@ -96,7 +90,6 @@ class PostServiceImpl(
         postRepository.delete(post)
     }
 }
-
 
 fun PostEntity.toResponse(): PostResponse {
     return PostResponse(

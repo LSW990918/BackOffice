@@ -38,9 +38,7 @@ class CommentEntity(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "commentid")
     var id: Int? = null
-
 }
 
 
