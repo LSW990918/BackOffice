@@ -3,6 +3,7 @@ package com.b2.backoffice.domain.post.model
 
 import com.b2.backoffice.domain.board.model.BoardEntity
 import com.b2.backoffice.domain.comment.model.CommentEntity
+import org.hibernate.annotations.Where
 import com.b2.backoffice.domain.post.dto.PostResponse
 import com.b2.backoffice.domain.post.dto.PostWithCommentResponse
 import com.b2.backoffice.domain.user.model.UserEntity
@@ -10,7 +11,8 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "post")
+@Table(name = "posts")
+@Where(clause = "is_deleted = false")
 class PostEntity(
     @Column(name = "created_at")
     val createdAt : LocalDateTime = LocalDateTime.now(),
@@ -27,6 +29,9 @@ class PostEntity(
     @Column(name = "likes")
     var likes : Int,
 
+    @Column(name = "is_deleted")
+    var is_deleted: Boolean = false,
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     val user : UserEntity,
@@ -42,9 +47,7 @@ class PostEntity(
         cascade = [CascadeType.ALL]
     )
     var comments : MutableList<CommentEntity> = mutableListOf()
-)
-
-{
+) {
     @Id
     @GeneratedValue(strategy = GenerationType. IDENTITY)
     val id : Int? = null

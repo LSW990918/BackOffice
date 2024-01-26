@@ -14,6 +14,9 @@ class CommentEntity(
     @Column(name = "content", nullable = false)
     var content: String,
 
+    @Column(name = "nickname", nullable = false)
+    var nickName: String,
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     var user: UserEntity,

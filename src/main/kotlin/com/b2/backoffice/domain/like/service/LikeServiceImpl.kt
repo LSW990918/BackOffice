@@ -1,9 +1,9 @@
 package com.b2.backoffice.domain.like.service
 
 import com.b2.backoffice.domain.exception.ModelNotFoundException
-import com.b2.backoffice.domain.like.dto.LikeResponse
 import com.b2.backoffice.domain.like.model.LikeEntity
 import com.b2.backoffice.domain.like.repository.LikeRepository
+import com.b2.backoffice.domain.like_count.dto.LikeCountResponse
 import com.b2.backoffice.domain.like_count.model.LikeCountEntity
 import com.b2.backoffice.domain.like_count.repository.LikeCountRepository
 import com.b2.backoffice.domain.post.repository.PostRepository
@@ -23,7 +23,8 @@ class LikeServiceImpl(
             ?: throw ModelNotFoundException("post", postId)
         val user = userRepository.findByIdOrNull(userId)
             ?: throw ModelNotFoundException("user", userId)
-/*        if (post.user.id == userId) {
+        //포스트의 유저아이디와 좋아요를 누르는 유저아이디가 같은지 확인
+        if (post.user.id == userId) {
             throw Exception()
         }
         if (likeRepository.findByUserIdAndPostId(userId, postId) == null) {
@@ -33,21 +34,32 @@ class LikeServiceImpl(
                     user
                 )
             )
-            likeCountRepository.findByPostId(postId)
-        } else throw Exception("Like is already exist")*/
+            val likeCount = LikeCountEntity(
+                post = post,
+                likeCount = likeRepository.findByPostId(post.id!!).size
+            )
+            likeCountRepository.save(likeCount)
+        } else throw Exception("Like is already exist")
     }
 
     override fun deleteLike(userId: Int, postId: Int) {
-        if (likeRepository.findByUserIdAndPostId(userId, postId) == null) {
-            throw ModelNotFoundException("like", postId)
-        }
-        likeRepository.deleteByUserIdAndPostId(userId, postId)
+        //포스트의 유저아이디와 좋아요를 누르는 유저아이디가 같은지 확인
+        val like = likeRepository.findByUserIdAndPostId(userId, postId)
+            ?: throw ModelNotFoundException("like", postId)
+        like.isDeleted = true
+        likeRepository.save(like)
+        val likeCount = likeCountRepository.findByPostId(postId)
+        likeCount.decreaseLikeCount()
+        likeCountRepository.save(likeCount)
     }
 
-    override fun getLike(postId: Int): LikeResponse? {
+    override fun getLike(postId: Int): LikeCountResponse? {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
-        return LikeResponse(postId, likeRepository.findByPostId(post.id!!).size)
+        val likeCount = likeCountRepository.findByPostId(post.id!!)
+        return LikeCountResponse(
+            postId = likeCount.post.id!!,
+            likeCount = likeCount.likeCount)
     }
 
 }
