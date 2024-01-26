@@ -9,7 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 
-@RequestMapping("/users/{userId}/follows")
+@RequestMapping("/users/follow_list")
 @RestController
 class FollowController(
     private val followService: FollowService
@@ -34,7 +34,7 @@ class FollowController(
             .body(followService.follow(userPrincipal.id, boardId))//유저아이디 추가예정
     }
 
-    @PutMapping
+    @DeleteMapping
     fun unfollow(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         boardId: Int,
