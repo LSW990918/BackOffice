@@ -10,7 +10,6 @@ interface CommentService {
 
     fun updateComment(postId: Int, commentId: Int, userPrincipal: UserPrincipal, request: CommentUpdateRequest): CommentResponse
 
-    fun getCommentByPostId(postId: Int): List<CommentResponse>
+    fun getCommentListByPostId(postId: Int): List<CommentResponse>
 
-    fun getAllComments(): List<CommentResponse>
 }

@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.comment.controller
 
+import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.comment.dto.*
 import com.b2.backoffice.domain.comment.service.CommentService
 import com.b2.backoffice.infra.security.UserPrincipal
@@ -55,20 +56,10 @@ class CommentController(
     }
     //특정 포스트의 댓글 조회
     @GetMapping("/{postId}/comments")
-    fun getCommentByPostId(
-        @PathVariable postId: Int
-    ): ResponseEntity<List<CommentResponse>> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(commentService.getCommentByPostId(postId))
-    }
+    fun getCommentListByPostId( @PathVariable postId: Int )
+                : ResponseEntity<List<CommentResponse>>{
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentListByPostId(postId))
 
-    // 모든 댓글 조회
-    @GetMapping("/comments")
-    fun getAllComments(): ResponseEntity<List<CommentResponse>> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(commentService.getAllComments())
     }
 
 }

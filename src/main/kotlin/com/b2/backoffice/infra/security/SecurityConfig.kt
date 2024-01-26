@@ -18,6 +18,9 @@ class SecurityConfig (
     private val authenticationEntryPoint: CustomAuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
 ){
+
+
+
     @Bean
     fun filterChain(http: HttpSecurity):SecurityFilterChain{
         return http
