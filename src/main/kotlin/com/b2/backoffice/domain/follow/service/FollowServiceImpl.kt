@@ -35,6 +35,7 @@ class FollowServiceImpl(
         val follow = followRepository.findByUserIdAndBoardId(userId, boardId)
             ?: throw ModelNotFoundException("follow", boardId)
         follow.isDeleted = true
+        followRepository.save(follow)
     }
 
     override fun getFollowList( userId: Int): List<BoardResponse> {

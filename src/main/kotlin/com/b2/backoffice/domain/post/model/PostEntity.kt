@@ -11,7 +11,7 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "post")
+@Table(name = "posts")
 @Where(clause = "is_deleted = false")
 class PostEntity(
     @Column(name = "created_at")

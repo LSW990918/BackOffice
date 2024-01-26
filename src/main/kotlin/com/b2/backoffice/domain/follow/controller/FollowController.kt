@@ -18,7 +18,6 @@ class FollowController(
     @GetMapping
     fun getFollowList(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Int = userPrincipal.id,
         ): ResponseEntity<List<BoardResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -28,7 +27,6 @@ class FollowController(
     @PostMapping
     fun follow(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Int = userPrincipal.id,
         boardId: Int,
         ): ResponseEntity<Unit> {
         return ResponseEntity
@@ -39,7 +37,6 @@ class FollowController(
     @PutMapping
     fun unfollow(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Int = userPrincipal.id,
         boardId: Int,
         ): ResponseEntity<Unit> {
         return ResponseEntity

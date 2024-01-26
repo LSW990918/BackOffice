@@ -46,7 +46,7 @@ class PostController(
             .body(postService.createPost(boardId, user.id, request))
     }
 
-    @PutMapping("/{postId}")
+    @PutMapping("/{postId}/update")
     fun updatePost(
         @PathVariable boardId: Int,
         @PathVariable postId: Int,
@@ -58,13 +58,14 @@ class PostController(
             .body(postService.updatePost(boardId, postId, user.id, request))
     }
 
-    @PutMapping("/{postId}")
+    @PutMapping("/{postId}/delete")
     fun deletePost(
         @PathVariable boardId: Int,
         @PathVariable postId: Int,
         @AuthenticationPrincipal user: UserPrincipal,
         ) : ResponseEntity<Unit> {
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(postService.deletePost(boardId, postId, user.id))
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .body(postService.deletePost(boardId, postId, user.id))
     }
 }
