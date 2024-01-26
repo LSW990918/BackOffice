@@ -9,7 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 
-@RequestMapping("/users/{userId}/follows")
+@RequestMapping("/users/follow_list")
 @RestController
 class FollowController(
     private val followService: FollowService
@@ -18,7 +18,6 @@ class FollowController(
     @GetMapping
     fun getFollowList(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Int = userPrincipal.id,
         ): ResponseEntity<List<BoardResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -28,7 +27,6 @@ class FollowController(
     @PostMapping
     fun follow(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Int = userPrincipal.id,
         boardId: Int,
         ): ResponseEntity<Unit> {
         return ResponseEntity
@@ -36,10 +34,9 @@ class FollowController(
             .body(followService.follow(userPrincipal.id, boardId))//유저아이디 추가예정
     }
 
-    @PutMapping
+    @DeleteMapping
     fun unfollow(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Int = userPrincipal.id,
         boardId: Int,
         ): ResponseEntity<Unit> {
         return ResponseEntity

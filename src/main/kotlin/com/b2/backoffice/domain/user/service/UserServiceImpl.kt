@@ -80,6 +80,13 @@ class UserServiceImpl(
             ?: throw throw ModelNotFoundException("User", userId)
     }
 
+
+    override fun setUser(userPrincipal: UserPrincipal, userId: Int) : UserResponse?{
+        val user = userRepository.findByIdOrNull(userId)
+            ?: throw ModelNotFoundException("User", userId)
+        TODO()
+    }
+
     @Transactional
     override fun updateUser(userPrincipal: UserPrincipal, userId: Int, request: UserUpdateRequest): UserResponse {
         val user = userRepository.findByIdOrNull(userId)

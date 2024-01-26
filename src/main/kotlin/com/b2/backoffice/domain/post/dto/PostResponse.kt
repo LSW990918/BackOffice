@@ -9,5 +9,4 @@ data class PostResponse(
     var nickname: String,
     var title: String,
     var contents: String,
-    var likes: Int,
 )
