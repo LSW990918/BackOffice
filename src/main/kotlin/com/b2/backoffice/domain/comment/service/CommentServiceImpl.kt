@@ -1,7 +1,7 @@
 package com.b2.backoffice.domain.comment.service
 
-import com.b2.backoffice.domain.comment.dto.CommentResponse
 import com.b2.backoffice.domain.comment.dto.CommentCreateRequest
+import com.b2.backoffice.domain.comment.dto.CommentResponse
 import com.b2.backoffice.domain.comment.dto.CommentUpdateRequest
 import com.b2.backoffice.domain.comment.model.CommentEntity
 import com.b2.backoffice.domain.comment.repository.CommentRepository
@@ -107,7 +107,7 @@ fun CommentEntity.toResponse(): CommentResponse {
         id = id,
         content = content,
         nickname = user.nickName,
-        createdAt = createAt
+        createdAt = createdAt
     )
 }
 

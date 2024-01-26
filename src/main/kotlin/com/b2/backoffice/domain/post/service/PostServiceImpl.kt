@@ -23,9 +23,7 @@ class PostServiceImpl(
     override fun getPostList(
         boardId: Int,
     ): List<PostResponse> {
-        return postRepository.findByBoardId(boardId).map {
-            it.toResponse()
-        }
+        return postRepository.findByBoardId(boardId).map { it.toResponse() }
 
     }
 
@@ -105,5 +103,6 @@ fun PostEntity.toResponse(): PostResponse {
         nickname = nickname,
         title = title,
         contents = contents,
+        likeCount = likeCount
     )
 }
