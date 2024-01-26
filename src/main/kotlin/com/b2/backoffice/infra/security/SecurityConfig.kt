@@ -18,6 +18,9 @@ class SecurityConfig (
     private val authenticationEntryPoint: CustomAuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
 ){
+
+
+
     @Bean
     fun filterChain(http: HttpSecurity):SecurityFilterChain{
         return http
@@ -40,6 +43,12 @@ class SecurityConfig (
             }
             // 기존 UsernamePasswordAuthenticationFilter 가 존재하던 자리에 JwtAuthenticationFilter 추가
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .logout { // 로그아웃 설정
+                it.logoutUrl("/users/logout") // 로그아웃 URL 지정
+                    .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트될 URL 지정
+                    .invalidateHttpSession(true) // HTTP 세션 무효화 여부
+                    .deleteCookies("JSESSIONID", "JWT_TOKEN") // 삭제할 쿠키 목록
+            }
             .exceptionHandling{ // 예외 처리 관련 설정
                 it.authenticationEntryPoint(authenticationEntryPoint)
                 it.accessDeniedHandler(accessDeniedHandler) // 에러 연결하기

@@ -19,6 +19,9 @@ class JwtAuthenticationFilter(
         private val BEARER_PATTERN = Regex("^Bearer (.+?)$")
 
     }
+
+
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
