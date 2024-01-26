@@ -1,18 +1,17 @@
 package com.b2.backoffice.domain.board.model
 
-import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.post.model.PostEntity
-import com.b2.backoffice.domain.user.dto.UserResponse
-import com.b2.backoffice.domain.user.model.UserEntity
 import jakarta.persistence.*
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
-
 import java.time.LocalDateTime
 
 @Entity
 @SQLDelete(sql = "UPDATE boards SET is_deleted = true WHERE id = ?") // DELETE 쿼리 날아올 시 대신 실행
 @Where(clause = "is_deleted = false")
+@OnDelete(action = OnDeleteAction.CASCADE)
 @Table(name = "boards")
 class BoardEntity(
     @Column(name = "created_at")
@@ -38,5 +37,12 @@ class BoardEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Int? = null
+
+    fun createPost(post:PostEntity){
+        posts.add(post)
+    }
+    fun deletePost(post:PostEntity){
+        posts.remove(post)
+    }
 }
 

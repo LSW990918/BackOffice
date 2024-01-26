@@ -60,9 +60,7 @@ class BoardServiceImpl (
         val board = boardRepository.findByIdOrNull(boardId)
             ?:throw ModelNotFoundException("Board", boardId)
 
-        //boardRepository.delete(Board)
-        board.isDeleted = true
-        boardRepository.save(board)
+        boardRepository.delete(board)
     }
 }
 
