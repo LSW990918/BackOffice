@@ -26,7 +26,7 @@ class LikeServiceImpl(
         if (post.user.id == userId) {
             throw Exception()
         }
-        if (likeRepository.findByUserIdAndPostIdOrNull(userId, postId) == null) {
+        if (likeRepository.findByUserIdAndPostId(userId, postId) == null) {
             likeRepository.save(
                 LikeEntity(
                     post,
@@ -40,7 +40,7 @@ class LikeServiceImpl(
 
     override fun deleteLike(userId: Int, postId: Int) {
         //포스트의 유저아이디와 좋아요를 누르는 유저아이디가 같은지 확인
-        val like = likeRepository.findByUserIdAndPostIdOrNull(userId, postId)
+        val like = likeRepository.findByUserIdAndPostId(userId, postId)
             ?: throw ModelNotFoundException("like", postId)
         like.isDeleted = true
         val likeCount = likeCountRepository.findByPostId(postId)
