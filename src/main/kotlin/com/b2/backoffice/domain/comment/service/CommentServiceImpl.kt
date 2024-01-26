@@ -8,6 +8,8 @@ import com.b2.backoffice.domain.comment.repository.CommentRepository
 import com.b2.backoffice.domain.exception.ModelNotFoundException
 import com.b2.backoffice.domain.post.repository.PostRepository
 import com.b2.backoffice.domain.user.repository.UserRepository
+import com.b2.backoffice.infra.security.SecurityService
+import com.b2.backoffice.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,19 +18,20 @@ import org.springframework.transaction.annotation.Transactional
 class CommentServiceImpl(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val securityService: SecurityService
 ) : CommentService {
 
     @Transactional
     override fun createComment(
         postId: Int,
-        userId: Int,
+        userPrincipal: UserPrincipal,
         request: CommentCreateRequest
     ): CommentResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
-        val user = userRepository.findByIdOrNull(userId)
-            ?: throw ModelNotFoundException("user", userId)
+        val user = userRepository.findByIdOrNull(userPrincipal.id)
+            ?: throw ModelNotFoundException("user", userPrincipal.id)
 
         val comment = CommentEntity(
             content = request.content,
@@ -44,16 +47,18 @@ class CommentServiceImpl(
 
     @Transactional
     override fun deleteComment(
-        userId: Int,
         postId: Int,
-        commentId: Int
+        commentId: Int,
+        userPrincipal: UserPrincipal
     ) {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
         val comment = commentRepository.findByIdOrNull(commentId)
             ?: throw ModelNotFoundException("Comment", commentId)
+        val user = userRepository.findByIdOrNull(userPrincipal.id)
+            ?: throw ModelNotFoundException("user", userPrincipal.id)
 
-        /* post.deleteComment(comment)*/
+        securityService.chkUserId(userPrincipal, user.id!!)
         commentRepository.delete(comment)
         postRepository.save(post)
     }
@@ -62,16 +67,20 @@ class CommentServiceImpl(
     override fun updateComment(
         postId: Int,
         commentId: Int,
-        userId: Int,
+        userPrincipal: UserPrincipal,
         request: CommentUpdateRequest
     ): CommentResponse {
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
         val comment = commentRepository.findByIdOrNull(commentId)
             ?: throw ModelNotFoundException("Comment", commentId)
+        val user = userRepository.findByIdOrNull(userPrincipal.id)
+            ?: throw ModelNotFoundException("user", userPrincipal.id)
 
+        securityService.chkUserId(userPrincipal, user.id!!)
         comment.content = request.content
         val updatedComment = commentRepository.save(comment)
+        postRepository.save(post)
 
         return updatedComment.toResponse()
     }
