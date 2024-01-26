@@ -3,6 +3,7 @@ package com.b2.backoffice.domain.board.service
 import com.b2.backoffice.domain.board.dto.BoardCreateRequest
 import com.b2.backoffice.domain.board.dto.BoardResponse
 import com.b2.backoffice.domain.board.dto.BoardUpdateRequest
+import com.b2.backoffice.domain.board.dto.toResponse
 import com.b2.backoffice.domain.board.model.BoardEntity
 import com.b2.backoffice.domain.board.repository.BoardRepository
 import com.b2.backoffice.domain.exception.ModelNotFoundException
@@ -64,12 +65,3 @@ class BoardServiceImpl (
     }
 }
 
-fun BoardEntity.toResponse() : BoardResponse
-{
-    return BoardResponse(
-        id = id!!,
-        createAt = createdAt,
-        title = title,
-        contents = contents
-    )
-}
