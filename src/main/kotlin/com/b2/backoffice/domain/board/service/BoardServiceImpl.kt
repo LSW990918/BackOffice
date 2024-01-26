@@ -55,6 +55,7 @@ class BoardServiceImpl (
         val user = userRepository.findByIdOrNull(userPrincipal.id)
             ?: throw ModelNotFoundException("User", userPrincipal.id)
 
+
         securityService.chkPassword(password, user.password)
 
         val board = boardRepository.findByIdOrNull(boardId)

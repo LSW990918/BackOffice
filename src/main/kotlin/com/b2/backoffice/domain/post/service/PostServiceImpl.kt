@@ -87,7 +87,7 @@ class PostServiceImpl(
         postId: Int,
         userPrincipal: UserPrincipal,
     ) {
-        val board = boardRepository.findByIdOrNull(boardId)
+         val board = boardRepository.findByIdOrNull(boardId)
             ?: throw ModelNotFoundException("board", boardId)
         val post = postRepository.findByIdOrNull(postId)
             ?: throw ModelNotFoundException("post", postId)
@@ -95,8 +95,8 @@ class PostServiceImpl(
         board.deletePost(post)
         postRepository.delete(post)
     }
-
 }
+
 
 fun PostEntity.toResponse(): PostResponse {
     return PostResponse(

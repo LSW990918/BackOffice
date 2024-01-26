@@ -92,6 +92,7 @@ class CommentServiceImpl(
     }
 }
 
+
 fun CommentEntity.toResponse(): CommentResponse {
     return CommentResponse(
         id = id,

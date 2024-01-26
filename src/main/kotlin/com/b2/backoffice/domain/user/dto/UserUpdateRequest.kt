@@ -20,4 +20,10 @@ data class UserUpdateRequest(
         message = "NickName must contain at least 4 characters, including letter, number, and no special character"
     )
     val nickName : String,
+
+    @field:Pattern(
+        regexp = "^[A-Za-z\\d]{4,10}$",
+        message = "Introduce must contain at least 4 characters, including letter, number, and no special character"
+    )
+    val introduce : String,
 )

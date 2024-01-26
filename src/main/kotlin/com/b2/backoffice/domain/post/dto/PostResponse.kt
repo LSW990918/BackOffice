@@ -1,5 +1,6 @@
 package com.b2.backoffice.domain.post.dto
 
+import com.b2.backoffice.domain.post.model.PostEntity
 import java.time.LocalDateTime
 
 
