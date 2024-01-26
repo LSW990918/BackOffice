@@ -10,11 +10,13 @@ import com.b2.backoffice.domain.user.model.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.hibernate.annotations.SQLDelete
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "posts")
 @Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE posts SET is_deleted = true WHERE id = ?")
 @OnDelete(action = OnDeleteAction.CASCADE)
 class PostEntity(
     @Column(name = "created_at")
