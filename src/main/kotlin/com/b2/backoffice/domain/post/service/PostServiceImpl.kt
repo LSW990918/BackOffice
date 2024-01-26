@@ -66,12 +66,6 @@ class PostServiceImpl(
             nickname = user.nickName,
             likes = 0,
         )
-
-        val likeCount = LikeCountEntity(
-            post = post,
-            likeCount = likeRepository.findByPostId(post.id!!).size
-        )
-        post.likes = likeCount.likeCount
         postRepository.save(post)
         return post.toResponse()
     }
