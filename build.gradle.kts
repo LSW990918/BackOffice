@@ -31,7 +31,6 @@ noArg {
     annotation("jakarta.persistence.Embeddable")
 }
 
-
 allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.MappedSuperclass")
@@ -51,6 +50,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     // 어플리케이션이 실행될 때만 DB 드라이버를 설치하겠다.
     runtimeOnly("org.postgresql:postgresql")
+
+    // Spring Security 추가
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // Validation 추가
+    implementation ("org.springframework.boot:spring-boot-starter-validation")
+
+
+    // jwt 관련 라이브러리 중 jjwt 추가
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
     // H2 database
     implementation("com.h2database:h2")
     runtimeOnly ("com.h2database:h2")
